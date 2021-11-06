@@ -1,0 +1,22 @@
+.dashboard
+{
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(246,239,228);
+}
+.title{
+    font-size: 5vw;
+}
+.current{
+    border-radius: 3px;
+    width: 85%;
+    height: 150px;
+    margin-top: 20px;
+}
+@media screen and (max-width: 550px) {
+    .tablecell{
+        font-size : 10px!important;
+    }
+}
