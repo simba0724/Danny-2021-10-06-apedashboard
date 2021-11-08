@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Paper, TableBody, TableCell, TextField, InputAdornment, TablePagination, TableFooter, TableHead, TableRow, Table, IconButton, Button } from '@mui/material';
+import { Box, Paper, TableBody, TableCell, TextField, InputAdornment, TablePagination, TableFooter, TableHead, TableRow, Table, IconButton, Button, Grid, Container } from '@mui/material';
 
 import PropTypes from 'prop-types';
 import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
@@ -201,7 +201,7 @@ export default function Dashboard() {
 
     let getacc = getAccountInfo();
     getacc.then((value) => {
-// console.log(value.accountDividendsInfo)
+    // console.log(value.accountDividendsInfo)
       setTokenAmount(value.holdingbalance)
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000)
@@ -222,123 +222,139 @@ export default function Dashboard() {
       <Box className="title" sx={{fontSize: '34px', mt: '15px'}}>
         Welcome to BNB Shinobi Dashboard
       </Box>
-      <Box className = "current">
-        <Paper elevation={10}>
-          <Box sx={{ padding: "15px", backgroundColor: "rgb(241,242,247)" }}>
-            <Box sx={{ display: "flex", paddingBottom: "20px" }}>
-              <Box sx={{ fontSize: "22px", paddingRight: "10px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Current reward:</Box>
-              <Box sx={{ backgroundColor: "#f6eb15", borderRadius: "15px", fontSize: "12px", padding: "6px 10px", width: "fit-content" }}>
-                {tokenname}
-              </Box>
-            </Box>
-            <TextField
-              id="input-with-icon-textfield"
-              label="Set your BSC Reward Token"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start" sx={{cursor: 'pointer'}} onClick={setRewardToken}>
-                    <RiSendPlane2Fill />
-                  </InputAdornment>
-                ),
-              }}
-              value={rewardtokenadd}
-              onChange={(e) => setRewardtokenadd(e.target.value)}
-              variant="standard"
-              size="small"
-              style={{ width: "100%" }}
-            />
-          </Box>
-        </Paper>
-      </Box>
-      <Paper elevation={10} sx={{ width: "85%", marginTop: "20px", backgroundColor: "rgb(241,242,247)" }}>
-        <Box sx={{ padding: "15px" }}>
-          <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Your Rewards</Box>
-          <DashPaper title="Your Holdings:" detail={(tokenAmount !== "undefined" ? tokenAmount : 0) + " CHAKRA"} />
-          <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-            <DashPaper title="Pending Rewards" width="30%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
-            <DashPaper title="Total Rewards" width="30%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
-            <DashPaper title="Queue Position" width="30%" detail={queuePosition} border />
-          </Box>
-        </Box>
-      </Paper>
-      <Paper elevation={10} sx={{ width: "85%", marginTop: "20px", backgroundColor: "rgb(241,242,247)" }}>
-        <Box sx={{ padding: "15px", }}>
-          <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Faucet</Box>
-          <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
-            <DashPaper title="Current BNB Balance" width="30%" detail={bnbamount + " BNB"} />
-            <DashPaper title="Withdrawable" width="30%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)  + " BNB"}>
-              <Button elevation={1} sx={{ marginTop: "5px", backgroundColor: "#f6eb15", height: "35px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", width: '100%' }} onClick={onWithdraw}>WITHDRAW<BsBoxArrowInRight /></Button>
-            </DashPaper>
-            <DashPaper title="Last Reward Paid" width="30%" detail={lastrewardTime.toString().split("GMT")[0]} />
-{/*"31st Dec 1969"*/}
-          </Box>
-        </Box>
-      </Paper>
-      <Paper elevation={10} sx={{ width: "85%", marginTop: "30px", marginBottom : "50px" }}>
-        <Box sx={{ backgroundColor: "rgb(241,242,247)", padding: "20px" }}>
-          <Box sx={{ fontSize: "25px", fontWeight: "bold", color: "rgb(17,25,53)" }}>Recent Transactions</Box>
-          <Box sx={{ overflowX: "scroll" }}>
-            <Table aria-label="custom pagination table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Transaction id</TableCell>
-                  <TableCell align="center">Amount</TableCell>
-                  <TableCell>From</TableCell>
-                  <TableCell>To</TableCell>
-                  <TableCell align="center">Date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(rowsPerPage > 0
-                  ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  : rows
-                ).map((row) => (
-                  <TableRow key={row.hash}>
-                    <TableCell component="th" scope="row">
-                      {row.hash}
-                    </TableCell>
-                    <TableCell style={{ width: 160 }} align="center">
-                      {row.nonce}
-                    </TableCell>
-                    <TableCell style={{ width: 160 }} align="right">
-                      {row.from}
-                    </TableCell>
-                    <TableCell style={{ width: 160 }} align="right">
-                      {row.to}
-                    </TableCell>
-                    <TableCell style={{ width: 160 }} align="center">
-                      {showDate(row.timeStamp)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                    colSpan={10}
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    SelectProps={{
-                      native: true,
+      <Container maxWidth="xl">
+        <Grid container spacing={4}>
+          <Grid item md={4} xs={12}>
+            <Box className = "current">
+              <Paper elevation={10} sx={{boxShadow: 'none', border: '1px solid #f6eb15'}}>
+                <Box sx={{ padding: "15px" }}>
+                  <Box sx={{ display: "flex", paddingBottom: "20px" }}>
+                    <Box sx={{ fontSize: "22px", paddingRight: "10px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Current reward:</Box>
+                    <Box sx={{ backgroundColor: "#f6eb15", borderRadius: "15px", fontSize: "12px", padding: "6px 10px", width: "fit-content" }}>
+                      {tokenname}
+                    </Box>
+                  </Box>
+                  <TextField
+                    id="input-with-icon-textfield"
+                    label="Set your BSC Reward Token"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start" sx={{cursor: 'pointer'}} onClick={setRewardToken}>
+                          <RiSendPlane2Fill />
+                        </InputAdornment>
+                      ),
                     }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
+                    value={rewardtokenadd}
+                    onChange={(e) => setRewardtokenadd(e.target.value)}
+                    variant="standard"
+                    size="small"
+                    style={{ width: "100%" }}
                   />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </Box>
-        </Box>
-      </Paper>
+                </Box>
+              </Paper>
+            </Box>
+            <Paper elevation={10} sx={{ width: "100%", marginTop: "30px", marginBottom : "50px" }}>
+              <Box sx={{ padding: "20px" }}>
+                <Box sx={{ fontSize: "25px", fontWeight: "bold", color: "rgb(17,25,53)" }}>Recent Transactions</Box>
+                <Box sx={{ overflowX: "scroll" }}>
+                  <Table aria-label="custom pagination table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Transaction id</TableCell>
+                        <TableCell align="center">Amount</TableCell>
+                        <TableCell>From</TableCell>
+                        <TableCell>To</TableCell>
+                        <TableCell align="center">Date</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {(rowsPerPage > 0
+                        ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        : rows
+                      ).map((row) => (
+                        <TableRow key={row.hash}>
+                          <TableCell component="th" scope="row">
+                            {row.hash}
+                          </TableCell>
+                          <TableCell style={{ width: 160 }} align="center">
+                            {row.nonce}
+                          </TableCell>
+                          <TableCell style={{ width: 160 }} align="right">
+                            {row.from}
+                          </TableCell>
+                          <TableCell style={{ width: 160 }} align="right">
+                            {row.to}
+                          </TableCell>
+                          <TableCell style={{ width: 160 }} align="center">
+                            {showDate(row.timeStamp)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+
+                      {emptyRows > 0 && (
+                        <TableRow style={{ height: 53 * emptyRows }}>
+                          <TableCell colSpan={6} />
+                        </TableRow>
+                      )}
+                    </TableBody>
+                    <TableFooter>
+                      <TableRow>
+                        <TablePagination
+                          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                          colSpan={10}
+                          count={rows.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          SelectProps={{
+                            native: true,
+                          }}
+                          onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
+                          ActionsComponent={TablePaginationActions}
+                        />
+                      </TableRow>
+                    </TableFooter>
+                  </Table>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
+          <Grid item md={8} xs={12}>
+            <Paper elevation={10} sx={{ width: "100%", marginTop: "20px", backgroundColor: "#f6eb15", border: '1px solid black', boxShadow: 'none' }}>
+              <Box sx={{ padding: "15px" }}>
+                <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Your Rewards</Box>
+                <DashPaper title="Your Holdings:" detail={(tokenAmount !== "undefined" ? tokenAmount : 0) + " CHAKRA"} />
+                <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
+                  <DashPaper title="Pending Rewards" width="30%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
+                  <DashPaper title="Total Rewards" width="30%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
+                  <DashPaper title="Queue Position" width="30%" detail={queuePosition} border />
+                </Box>
+              </Box>
+            </Paper>
+            <Paper elevation={10} sx={{ width: "100%", marginTop: "20px", backgroundColor: "#1b1b1b" }}>
+              <Box sx={{ padding: "15px", }}>
+                <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "white", fontWeight: "bold" }}>Faucet</Box>
+                <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
+                  <DashPaper title="Current BNB Balance" width="30%" detail={bnbamount + " BNB"} />
+                  <DashPaper title="Withdrawable" width="30%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)  + " BNB"}>
+                  </DashPaper>
+                  <DashPaper title="Last Reward Paid" width="30%" detail={lastrewardTime.toString().split("GMT")[0]} />
+                </Box>
+                <Button elevation={1} sx={{ marginTop: "5px", backgroundColor: "#f6eb15", height: "35px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", width: '100%' }} onClick={onWithdraw}>WITHDRAW<BsBoxArrowInRight /></Button>
+              </Box>
+            </Paper>
+            <Paper elevation={10} sx={{ width: "100%", marginTop: "20px", backgroundColor: "#f6eb15", border: '1px solid black', boxShadow: 'none' }}>
+              <Box sx={{ padding: "15px" }}>
+                <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
+                <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
+                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
+                  <DashPaper title="Total Rewards" width="46%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
     </Box >
   );
 }

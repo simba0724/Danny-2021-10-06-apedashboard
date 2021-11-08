@@ -4,14 +4,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(246,239,228);
+    background-color: white;
 }
+/*rgb(246,239,228)*/
 .title{
     font-size: 5vw;
 }
 .current{
     border-radius: 3px;
-    width: 85%;
+    width: 100%;
     height: 150px;
     margin-top: 20px;
 }

@@ -38,10 +38,10 @@ export default function NavBar() {
 
   return (
     <div style={{ height: "60px", width: "100%", top: "0", position: "fixed", zIndex : "10" }}>
-      <div style={{ height: "100%", backgroundColor: "rgb(246,239,228)", display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: "20px", paddingRight: "20px" }}>
+      <div style={{ height: "100%", backgroundColor: "rgb(0,0,0)", display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: "20px", paddingRight: "20px" }}>
         <a href="https://bnbshinobi.com" style={{ display: "flex", fontSize: "18px", color: "white", alignItems: "center", height: "100%" }}>
           <img src="logo.png" style={{ height: "80%" }} />
-          <div style={{ paddingLeft: "16px", color: "black" }} className="logotext">
+          <div style={{ paddingLeft: "16px", color: "white" }} className="logotext">
             <span style={{ color: "#f6eb15" }}>BNB </span>SHINOBI
           </div>
         </a>
