@@ -323,7 +323,7 @@ export default function Dashboard() {
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Your Rewards</Box>
                 <DashPaper title="Your Holdings:" detail={(tokenAmount !== "undefined" ? tokenAmount : 0) + " CHAKRA"} />
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Pending Rewards" width="30%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
+                  <DashPaper title="Pending Rewards" width="30%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
                   <DashPaper title="Total Rewards" width="30%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
                   <DashPaper title="Queue Position" width="30%" detail={queuePosition} border />
                 </Box>
@@ -345,7 +345,7 @@ export default function Dashboard() {
               <Box sx={{ padding: "15px" }}>
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
+                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
                   <DashPaper title="Total Rewards" width="46%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
                 </Box>
               </Box>
