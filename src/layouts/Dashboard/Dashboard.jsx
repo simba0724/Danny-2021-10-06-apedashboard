@@ -204,12 +204,10 @@ export default function Dashboard() {
     // console.log(value.accountDividendsInfo)
       setTokenAmount(value.holdingbalance)
       if(value.accountDividendsInfo) {
-        setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000)
-        setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000))
-        setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000)
+        setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
+        setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
+        setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
         setQueuePosition(value.accountDividendsInfo[1].toString())
-
-        console.log(Number(value.accountDividendsInfo[3].toString()) / 1000000000) 
       }
 
       getTokenName(value.currentToken)
