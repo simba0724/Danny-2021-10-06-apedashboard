@@ -8,7 +8,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
-import * as evmChains from "evm-chains";
 
 let providerOptions = {
   walletconnect: {
@@ -42,19 +41,19 @@ function App() {
   //   setBalances({});
   // }
 
-  const init = () => {
-    // if(window.location.protocol !== 'https:') {
-    //   setSecureProtocolError(true);
-    //   return;
-    // }
-    const providerOptions = {};
+  // const init = () => {
+  //   if(window.location.protocol !== 'https:') {
+  //     setSecureProtocolError(true);
+  //     return;
+  //   }
+  //   const providerOptions = {};
 
-    web3Modal = new Web3Modal({
-      cacheProvider: false, // optional
-      providerOptions, // required
-      disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
-    });
-  }
+  //   web3Modal = new Web3Modal({
+  //     cacheProvider: false, // optional
+  //     providerOptions, // required
+  //     disableInjectedProvider: false,
+  //   });
+  // }
 
   const onConnect = async () => {
     try {
@@ -90,16 +89,13 @@ function App() {
 
     const web3 = new Web3(provider);
 
-    console.log("Web3 instance is", web3);
-
-    const chainId = await web3.eth.getChainId();
+    // const chainId = await web3.eth.getChainId();
 
     // const chainData = evmChains?.getChain(chainId);
     // setNetwork(chainData.name);
 
     const accounts = await web3.eth.getAccounts();
 
-    console.log("Got accounts", accounts);
     setSelectedAccount(accounts[0]);
   }
 
@@ -114,7 +110,6 @@ function App() {
 
   //   clearAccountData();
   // }
-console.log(web3Modal)
 	return (
 		<div className="App">
 			<Router>

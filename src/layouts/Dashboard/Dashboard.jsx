@@ -87,7 +87,7 @@ export default function Dashboard({account}) {
 
   // const rewardContract1 = useContract(contract_address, BSCABI);
 
-  const web3 = new Web3();
+  const web3 = new Web3("https://bsc-dataseed1.binance.org/");
   const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   const handleChangePage = (event, newPage) => {
@@ -121,11 +121,11 @@ export default function Dashboard({account}) {
   const getAccountInfo = async () => {
     let promise = new Promise(async (resolve, reject) => {
       try {
-        let holdingbalance = await rewardContract.dividendTokenBalanceOf(account)
-        let currentreward = await rewardContract.balanceOf(account)
-        let currentToken = await rewardContract.getUserCurrentRewardToken(account); // get current reward token adderss
-console.log(holdingbalance)
-        let accountDividendsInfo = await rewardContract.getAccountDividendsInfo(account)
+        let currentreward = await rewardContract.methods.balanceOf(account).call()
+        let holdingbalance = await rewardContract.methods.dividendTokenBalanceOf(account).call()
+        let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
+
+        let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
 
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
@@ -143,7 +143,7 @@ console.log(holdingbalance)
 
   const setRewardToken = async () => {
     try {
-      let reward = await rewardContract.setRewardToken(rewardtokenadd);
+      let reward = await rewardContract.methods.setRewardToken(rewardtokenadd);
 
       window.alert("Reward token changed successfully")
     } catch (e) {
@@ -153,7 +153,7 @@ console.log(holdingbalance)
 
   const onWithdraw = async () => {
     try {
-      let withdraw = await rewardContract.claim();
+      let withdraw = await rewardContract.methods.claim();
       console.log(withdraw)
       window.alert("Reward withdrawed successfully")
     } catch (e) {
@@ -174,10 +174,10 @@ console.log(holdingbalance)
 
   const getTokenName = async (tokenaddress) => {
     if(tokenaddress) {
-      const tokenContract = getContract(tokenaddress, ERC20, library, account)
+      // const tokenContract = new web3.eth.Contract(ERC20, library, account)
 
-      let name = await tokenContract.name();
-      setTokenname(name)
+      // let name = await tokenContract.methods.name();
+      // setTokenname(name)
     }
   }
 
@@ -198,13 +198,13 @@ console.log(holdingbalance)
 
     let getacc = getAccountInfo();
     getacc.then((value) => {
-    // console.log(value.accountDividendsInfo)
+console.log("value===>", value)
       setTokenAmount(value.holdingbalance)
       if(value.accountDividendsInfo) {
-        setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
-        setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
-        setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
-        setQueuePosition(value.accountDividendsInfo[1].toString())
+        // setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
+        // setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
+        // setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
+        // setQueuePosition(value.accountDividendsInfo[1].toString())
       }
 
       getTokenName(value.currentToken)
