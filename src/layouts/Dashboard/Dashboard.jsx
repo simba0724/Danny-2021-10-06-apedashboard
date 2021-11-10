@@ -12,9 +12,8 @@ import './style.scss'
 
 import Web3 from "web3";
 
-import { useContract } from '../../hooks/useContract';
-import { useActiveWeb3React } from '../../hooks/useWeb3';
 import { getContract } from '../../utils/contracts';
+import { useContract } from '../../hooks/useContract';
 
 import BSCABI from '../../services/abis/BSC.json';
 import ERC20 from '../../services/abis/ERC20.json';
@@ -83,9 +82,8 @@ export default function Dashboard({account}) {
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-  const { library } = useActiveWeb3React();
 
-  // const rewardContract1 = useContract(contract_address, BSCABI);
+  const rewardContract1 = useContract(contract_address, BSCABI);
 
   const web3 = new Web3("https://bsc-dataseed1.binance.org/");
   const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
@@ -122,7 +120,7 @@ export default function Dashboard({account}) {
     let promise = new Promise(async (resolve, reject) => {
       try {
         let currentreward = await rewardContract.methods.balanceOf(account).call()
-        let holdingbalance = await rewardContract.methods.dividendTokenBalanceOf(account).call()
+        let holdingbalance = await rewardContract1.dividendTokenBalanceOf(account)
         let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
 
         let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
@@ -142,15 +140,11 @@ export default function Dashboard({account}) {
   }
 
   const setRewardToken = async () => {
+  console.log(rewardContract1)
     try {
-      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gasPrice: 20000000000}, (err, res) => {
-        if(err) {
-          throw err;
-        }
-        console.log(res)
-        window.alert("Reward token changed successfully")
-      });
+      let reward = await rewardContract1.setRewardToken(rewardtokenadd);
 
+      window.alert("Reward token changed successfully")
     } catch (e) {
       console.log(e)
       window.alert("Please Input token address")
@@ -159,16 +153,10 @@ export default function Dashboard({account}) {
 
   const onWithdraw = async () => {
     try {
-      rewardContract.methods.claim().send({from: account}, (err, res) => {
-        if(err) {
-          throw err;
-        }
-        console.log(res)
-        window.alert("Reward withdrawed successfully")
-      });
-
+      let withdraw = await rewardContract1.claim();
+      console.log(withdraw)
+      window.alert("Reward withdrawed successfully")
     } catch (e) {
-      console.log(e)
       window.alert("Something was wrong. Withdraw failed!")
     }
   }
@@ -211,6 +199,7 @@ export default function Dashboard({account}) {
 
     let getacc = getAccountInfo();
     getacc.then((value) => {
+console.log(value)
       setTokenAmount(value.holdingbalance)
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
