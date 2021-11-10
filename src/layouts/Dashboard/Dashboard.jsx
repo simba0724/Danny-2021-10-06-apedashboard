@@ -10,7 +10,6 @@ import { RiSendPlane2Fill } from 'react-icons/ri';
 
 import './style.scss'
 
-import { useWeb3React } from '@web3-react/core';
 import Web3 from "web3";
 
 import { useContract } from '../../hooks/useContract';
@@ -64,7 +63,7 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function Dashboard() {
+export default function Dashboard({account}) {
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
@@ -81,8 +80,6 @@ export default function Dashboard() {
   const [tokenname, setTokenname] = React.useState('BNB');
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const { account, connector, chainId, activate, error, active } = useWeb3React();
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
