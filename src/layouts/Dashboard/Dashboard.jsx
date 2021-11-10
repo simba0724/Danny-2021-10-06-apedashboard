@@ -12,8 +12,6 @@ import './style.scss'
 
 import Web3 from "web3";
 
-import { useContract } from '../../hooks/useContract';
-import { useActiveWeb3React } from '../../hooks/useWeb3';
 import { getContract } from '../../utils/contracts';
 
 import BSCABI from '../../services/abis/BSC.json';
@@ -83,7 +81,6 @@ export default function Dashboard({account}) {
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-  const { library } = useActiveWeb3React();
 
   // const rewardContract1 = useContract(contract_address, BSCABI);
 
