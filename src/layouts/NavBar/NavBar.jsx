@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 
 import './style.scss';
@@ -25,7 +25,6 @@ export default function NavBar({selectedAccount, onConnect, init}) {
   const accountEllipsis = selectedAccount ? selectedAccount : null;
 
   useEffect(() => {
-    init();
     if (selectedAccount) {
       history.push("/dashboard");
     }

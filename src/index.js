@@ -4,12 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import {createWeb3ReactRoot, Web3ReactProvider} from '@web3-react/core';
+import {Web3ReactProvider} from '@web3-react/core';
 
 import {getLibrary} from './utils/getLibrary';
-
-const NetworkContextName = `${new Date().getTime()}-NETWORK`;
-const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 
 ReactDOM.render(
 	<Web3ReactProvider getLibrary={getLibrary}>
