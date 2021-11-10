@@ -143,7 +143,7 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      rewardContract.methods.setRewardToken(rewardtokenadd).send({}, (err, res) => {
+      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: contract_address, gasPrice: 20000000000}, (err, res) => {
         if(err) {
           throw err;
         }
@@ -158,7 +158,7 @@ export default function Dashboard({account}) {
 
   const onWithdraw = async () => {
     try {
-      rewardContract.methods.claim().send({from: account}, (err, res) => {
+      rewardContract.methods.claim().send({from: contract_address}, (err, res) => {
         if(err) {
           throw err;
         }
