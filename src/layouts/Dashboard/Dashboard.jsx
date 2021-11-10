@@ -143,7 +143,7 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account}, (err, res) => {
+      rewardContract.methods.setRewardToken(rewardtokenadd).send({}, (err, res) => {
         if(err) {
           throw err;
         }
