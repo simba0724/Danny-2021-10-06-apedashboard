@@ -89,7 +89,6 @@ export default function Dashboard({account}) {
 
   const web3 = new Web3("https://bsc-dataseed1.binance.org/");
   const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
-  const acct = web3.eth.account.privateKeyToAccount(account)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -144,7 +143,7 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: acct, gasPrice: 20000000000}, (err, res) => {
+      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gasPrice: 20000000000}, (err, res) => {
         if(err) {
           throw err;
         }
@@ -160,7 +159,7 @@ export default function Dashboard({account}) {
 
   const onWithdraw = async () => {
     try {
-      rewardContract.methods.claim().send({from: acct}, (err, res) => {
+      rewardContract.methods.claim().send({from: account}, (err, res) => {
         if(err) {
           throw err;
         }
