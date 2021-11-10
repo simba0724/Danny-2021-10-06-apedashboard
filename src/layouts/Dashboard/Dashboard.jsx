@@ -143,9 +143,14 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      let reward = await rewardContract.methods.setRewardToken(rewardtokenadd);
+      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account}, (err, res) => {
+        if(err) {
+          throw err;
+        }
+        console.log(res)
+        window.alert("Reward token changed successfully")
+      });
 
-      window.alert("Reward token changed successfully")
     } catch (e) {
       window.alert("Please Input token address")
     }
@@ -153,10 +158,16 @@ export default function Dashboard({account}) {
 
   const onWithdraw = async () => {
     try {
-      let withdraw = await rewardContract.methods.claim();
-      console.log(withdraw)
-      window.alert("Reward withdrawed successfully")
+      rewardContract.methods.claim().send({from: account}, (err, res) => {
+        if(err) {
+          throw err;
+        }
+        console.log(res)
+        window.alert("Reward withdrawed successfully")
+      });;
+
     } catch (e) {
+      console.log(e)
       window.alert("Something was wrong. Withdraw failed!")
     }
   }
@@ -174,10 +185,11 @@ export default function Dashboard({account}) {
 
   const getTokenName = async (tokenaddress) => {
     if(tokenaddress) {
-      // const tokenContract = new web3.eth.Contract(ERC20, library, account)
+      const tokenContract = new web3.eth.Contract(ERC20, tokenaddress)
 
-      // let name = await tokenContract.methods.name();
-      // setTokenname(name)
+      let name = await tokenContract.methods.name().call();
+
+      setTokenname(name)
     }
   }
 
