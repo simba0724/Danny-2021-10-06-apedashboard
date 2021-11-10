@@ -14,7 +14,7 @@ const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 ReactDOM.render(
 	<Web3ReactProvider getLibrary={getLibrary}>
 	  	<React.StrictMode>
-	    	<App />
+			<App />
 	  	</React.StrictMode>
   	</Web3ReactProvider>,
   	document.getElementById('root')

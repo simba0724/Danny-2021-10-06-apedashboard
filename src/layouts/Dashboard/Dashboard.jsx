@@ -64,15 +64,6 @@ function TablePaginationActions(props) {
   );
 }
 
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-const transaction_api = "https://api.bscscan.com/api?module=account&action=txlist&address="+contract_address+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
-
 export default function Dashboard() {
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -93,9 +84,14 @@ export default function Dashboard() {
 
   const { account, connector, chainId, activate, error, active } = useWeb3React();
 
+  const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
+
   const { library } = useActiveWeb3React();
 
-  const rewardContract = useContract(contract_address, BSCABI);
+  // const rewardContract1 = useContract(contract_address, BSCABI);
+
+  const web3 = new Web3();
+  const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -113,7 +109,11 @@ export default function Dashboard() {
         let response = await fetch(transaction_api);
         let data = await response.json();
 
-        resolve(data.result);
+        if(data.status == '1') {
+          resolve(data.result);
+        } else {
+          resolve([]);
+        }
       } catch (e) {
         console.log(e)
       }
@@ -127,7 +127,7 @@ export default function Dashboard() {
         let holdingbalance = await rewardContract.dividendTokenBalanceOf(account)
         let currentreward = await rewardContract.balanceOf(account)
         let currentToken = await rewardContract.getUserCurrentRewardToken(account); // get current reward token adderss
-
+console.log(holdingbalance)
         let accountDividendsInfo = await rewardContract.getAccountDividendsInfo(account)
 
         resolve({
@@ -323,7 +323,7 @@ export default function Dashboard() {
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Your Rewards</Box>
                 <DashPaper title="Your Holdings:" detail={(tokenAmount !== "undefined" ? tokenAmount : 0) + " CHAKRA"} />
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Pending Rewards" width="30%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
+                  <DashPaper title="Pending Rewards" width="30%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
                   <DashPaper title="Total Rewards" width="30%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
                   <DashPaper title="Queue Position" width="30%" detail={queuePosition} border />
                 </Box>
@@ -345,7 +345,7 @@ export default function Dashboard() {
               <Box sx={{ padding: "15px" }}>
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(totalMount - withdrawableamount)+ " BNB"} border />
+                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
                   <DashPaper title="Total Rewards" width="46%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
                 </Box>
               </Box>
