@@ -198,13 +198,12 @@ export default function Dashboard({account}) {
 
     let getacc = getAccountInfo();
     getacc.then((value) => {
-console.log("value===>", value)
       setTokenAmount(value.holdingbalance)
       if(value.accountDividendsInfo) {
-        // setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
-        // setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
-        // setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
-        // setQueuePosition(value.accountDividendsInfo[1].toString())
+        setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
+        setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
+        setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
+        setQueuePosition(value.accountDividendsInfo[1].toString())
       }
 
       getTokenName(value.currentToken)
