@@ -220,7 +220,11 @@ export default function Dashboard({account}) {
 console.log(value.lastreward)
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
-        setLastreward(new Date(value.lastreward))
+        if(value.lastreward == 0) {
+          setLastreward(new Date(value.lastreward))
+        } else {
+          setLastreward("")
+        }
         setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
         setQueuePosition(value.accountDividendsInfo[1].toString())
       }
