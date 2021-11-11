@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Paper, TableBody, TableCell, TextField, InputAdornment, TablePagination, TableFooter, TableHead, TableRow, Table, IconButton, Button, Grid, Container } from '@mui/material';
+import { Box, Paper, TableBody, TableCell, TextField, InputAdornment, TablePagination, TableFooter, TableHead, TableRow, Table, IconButton, Button, Grid, Container, Slider } from '@mui/material';
 
 import PropTypes from 'prop-types';
 import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
@@ -169,7 +169,7 @@ export default function Dashboard({account}) {
 
   const onBuyback = async () => {
     try {
-      let reward = await rewardContract1.buyBackTokensWithNoFees();
+      let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: String(buybackamount)});
 
       window.alert("Buy back successfully")
     } catch (e) {
@@ -364,8 +364,8 @@ export default function Dashboard({account}) {
               <Box sx={{ padding: "15px" }}>
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Available BuyBack Amount" width="100%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
-                  {/*<Paper elevation={10} sx={{ width: "46%", backgroundColor: "#FFF", padding: '20px', border: '1px solid #f6eb15', boxShadow: 'none' }}>
+                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
+                  <Paper elevation={10} sx={{ width: "46%", backgroundColor: "#FFF", padding: '20px', border: '1px solid #f6eb15', boxShadow: 'none' }}>
                     <TextField
                       id="input-with-icon-textfield"
                       label="Buy Back Token Amount"
@@ -376,7 +376,17 @@ export default function Dashboard({account}) {
                       type="number"
                       style={{ width: "100%" }}
                     />
-                  </Paper>*/}
+                    <Slider
+                      size="small"
+                      aria-label="Temperature"
+                      defaultValue={0}
+                      value={buybackamount}
+                      onChange={(e) => setBuyBackAmount(Number(e.target.value))}
+                      step={buyback / 100}
+                      min={0}
+                      max={buyback}
+                    />
+                  </Paper>
                   
                   <Button elevation={1} sx={{ marginTop: "5px", backgroundColor: "#1b1b1b", height: "35px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", width: '100%' }} onClick={onBuyback}>Buy Back<BsBoxArrowInRight /></Button>
                 </Box>
