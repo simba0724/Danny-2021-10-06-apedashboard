@@ -5,6 +5,8 @@ import { NavBar } from './layouts/NavBar';
 import { Dashboard } from './layouts/Dashboard';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { InjectedConnector } from '@web3-react/injected-connector';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
@@ -21,6 +23,10 @@ let providerOptions = {
   }
 };
 
+const injected = new InjectedConnector({
+  supportedChainIds: [1, 3, 4, 5, 42, 56],
+})
+
 let web3Modal = new Web3Modal({
   network: "mainnet", // optional
   cacheProvider: true, // optional
@@ -32,6 +38,7 @@ let provider;
 function App() {
 	// const [secureProtocolError, setSecureProtocolError] = useState(false);
   // const [network, setNetwork] = useState(undefined);
+  const { connector, chainId, activate, deactivate, error, account, active } = useWeb3React();
   const [selectedAccount, setSelectedAccount] = useState(undefined);
   // const [balances, setBalances] = useState({});
 
@@ -61,6 +68,12 @@ function App() {
     } catch(e) {
       console.log("Could not get a wallet connection", e);
       return;
+    }
+
+    try {
+      await activate(injected);
+    } catch (ex) {
+      console.log("ex", ex)
     }
 
     // Subscribe to accounts change

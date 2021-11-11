@@ -12,9 +12,8 @@ import './style.scss'
 
 import Web3 from "web3";
 
-import { useContract } from '../../hooks/useContract';
-import { useActiveWeb3React } from '../../hooks/useWeb3';
 import { getContract } from '../../utils/contracts';
+import { useContract } from '../../hooks/useContract';
 
 import BSCABI from '../../services/abis/BSC.json';
 import ERC20 from '../../services/abis/ERC20.json';
@@ -74,6 +73,8 @@ export default function Dashboard({account}) {
   const [pendingAmount, setPendingAmount] = React.useState(0);
   const [withdrawableamount, setWithdrawable] = React.useState(0);
   const [bnbamount, setBnbamount] = React.useState(0);
+  const [buyback, setBuyback] = React.useState(0);
+
   const [queuePosition, setQueuePosition] = React.useState('');
   const [lastrewardTime, setLastreward] = React.useState(new Date);
 
@@ -83,9 +84,8 @@ export default function Dashboard({account}) {
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-  const { library } = useActiveWeb3React();
 
-  // const rewardContract1 = useContract(contract_address, BSCABI);
+  const rewardContract1 = useContract(contract_address, BSCABI);
 
   const web3 = new Web3("https://bsc-dataseed1.binance.org/");
   const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
@@ -122,7 +122,8 @@ export default function Dashboard({account}) {
     let promise = new Promise(async (resolve, reject) => {
       try {
         let currentreward = await rewardContract.methods.balanceOf(account).call()
-        let holdingbalance = await rewardContract.methods.dividendTokenBalanceOf(account).call()
+        let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
+        let holdingbalance = await rewardContract1.dividendTokenBalanceOf(account)
         let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
 
         let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
@@ -130,6 +131,7 @@ export default function Dashboard({account}) {
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
           currentreward: Number(currentreward.toString()) / 1000000000,
+          buyback: Number(buyback.toString()) / 1000000000,
           accountDividendsInfo: accountDividendsInfo,
           currentToken: currentToken,
         });
@@ -143,14 +145,9 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gasPrice: 20000000000}, (err, res) => {
-        if(err) {
-          throw err;
-        }
-        console.log(res)
-        window.alert("Reward token changed successfully")
-      });
+      let reward = await rewardContract1.setRewardToken(rewardtokenadd);
 
+      window.alert("Reward token changed successfully")
     } catch (e) {
       console.log(e)
       window.alert("Please Input token address")
@@ -159,17 +156,22 @@ export default function Dashboard({account}) {
 
   const onWithdraw = async () => {
     try {
-      rewardContract.methods.claim().send({from: account}, (err, res) => {
-        if(err) {
-          throw err;
-        }
-        console.log(res)
-        window.alert("Reward withdrawed successfully")
-      });
+      let withdraw = await rewardContract1.claim();
+      console.log(withdraw)
+      window.alert("Reward withdrawed successfully")
+    } catch (e) {
+      window.alert("Something was wrong. Withdraw failed!")
+    }
+  }
 
+  const onBuyback = async () => {
+    try {
+      let reward = await rewardContract1.buyBackTokensWithNoFees();
+
+      window.alert("Buy back successfully")
     } catch (e) {
       console.log(e)
-      window.alert("Something was wrong. Withdraw failed!")
+      window.alert("Something was wrong. Buy back failed!")
     }
   }
 
@@ -211,7 +213,9 @@ export default function Dashboard({account}) {
 
     let getacc = getAccountInfo();
     getacc.then((value) => {
+console.log(value)
       setTokenAmount(value.holdingbalance)
+      setBuyback(value.buyback)
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
         setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
@@ -354,8 +358,8 @@ export default function Dashboard({account}) {
               <Box sx={{ padding: "15px" }}>
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
-                  <DashPaper title="Total Rewards" width="46%" detail={(totalMount !== "undefined" ? totalMount : 0) + "BNB"} border />
+                  <DashPaper title="Available BuyBack Amount" width="100%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
+                  <Button elevation={1} sx={{ marginTop: "5px", backgroundColor: "#1b1b1b", height: "35px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", width: '100%' }} onClick={onBuyback}>Buy Back<BsBoxArrowInRight /></Button>
                 </Box>
               </Box>
             </Paper>

@@ -676,7 +676,7 @@
     "name": "dividendTracker",
     "outputs": [
       {
-        "internalType": "contract MagicDOGEDividendTracker",
+        "internalType": "contract BNBShinobiDividendTracker",
         "name": "",
         "type": "address"
       }
