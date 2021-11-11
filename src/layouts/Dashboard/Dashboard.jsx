@@ -144,7 +144,7 @@ export default function Dashboard({account}) {
   }
 
   const setRewardToken = async () => {
-  console.log(rewardContract1)
+    console.log(rewardContract1)
     try {
       let reward = await rewardContract1.setRewardToken(rewardtokenadd);
 
@@ -173,8 +173,8 @@ export default function Dashboard({account}) {
     } catch (e) {
       console.log(e)
       window.alert("Something was wrong. Buy back failed!")
+    }
   }
-
   const showDate = (time) => {
     var date = new Date(time * 1000);
 
@@ -213,7 +213,6 @@ export default function Dashboard({account}) {
 
     let getacc = getAccountInfo();
     getacc.then((value) => {
-console.log(value)
       setTokenAmount(value.holdingbalance)
       setBuyback(value.buyback)
       if(value.accountDividendsInfo) {
@@ -370,4 +369,4 @@ console.log(value)
   );
 }
 
-export { Dashboard };
+export { Dashboard }
