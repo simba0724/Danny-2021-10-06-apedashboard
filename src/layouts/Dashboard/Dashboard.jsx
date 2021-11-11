@@ -74,6 +74,7 @@ export default function Dashboard({account}) {
   const [withdrawableamount, setWithdrawable] = React.useState(0);
   const [bnbamount, setBnbamount] = React.useState(0);
   const [buyback, setBuyback] = React.useState(0);
+  const [buybackamount, setBuyBackAmount] = React.useState(0);
 
   const [queuePosition, setQueuePosition] = React.useState('');
   const [lastrewardTime, setLastreward] = React.useState(new Date);
@@ -146,7 +147,6 @@ export default function Dashboard({account}) {
   }
 
   const setRewardToken = async () => {
-    console.log(rewardContract1)
     try {
       let reward = await rewardContract1.setRewardToken(rewardtokenadd);
 
@@ -169,7 +169,7 @@ export default function Dashboard({account}) {
 
   const onBuyback = async () => {
     try {
-      let reward = await rewardContract1.getBNBAvailableForHolderBuyBack(account);
+      let reward = await rewardContract1.buyBackTokensWithNoFees(buybackamount);
 
       window.alert("Buy back successfully")
     } catch (e) {
@@ -217,7 +217,7 @@ export default function Dashboard({account}) {
     getacc.then((value) => {
       setTokenAmount(value.holdingbalance)
       setBuyback(value.buyback)
-console.log(value.lastreward)
+
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
         if(value.lastreward != 0) {
@@ -364,7 +364,20 @@ console.log(value.lastreward)
               <Box sx={{ padding: "15px" }}>
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <DashPaper title="Available BuyBack Amount" width="100%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
+                  <DashPaper title="Available BuyBack Amount" width="46%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
+                  <Paper elevation={10} sx={{ width: "46%", backgroundColor: "#FFF", padding: '20px', border: '1px solid #f6eb15', boxShadow: 'none' }}>
+                    <TextField
+                      id="input-with-icon-textfield"
+                      label="Buy Back Token Amount"
+                      value={buybackamount}
+                      onChange={(e) => setBuyBackAmount(Number(e.target.value))}
+                      variant="standard"
+                      size="small"
+                      type="number"
+                      style={{ width: "100%" }}
+                    />
+                  </Paper>
+                  
                   <Button elevation={1} sx={{ marginTop: "5px", backgroundColor: "#1b1b1b", height: "35px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", width: '100%' }} onClick={onBuyback}>Buy Back<BsBoxArrowInRight /></Button>
                 </Box>
               </Box>
