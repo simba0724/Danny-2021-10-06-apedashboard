@@ -144,6 +144,7 @@ export default function Dashboard({account}) {
   }
 
   const setRewardToken = async () => {
+  console.log(rewardContract1)
     try {
       let reward = await rewardContract1.setRewardToken(rewardtokenadd);
 
@@ -172,7 +173,6 @@ export default function Dashboard({account}) {
     } catch (e) {
       console.log(e)
       window.alert("Something was wrong. Buy back failed!")
-    }
   }
 
   const showDate = (time) => {
