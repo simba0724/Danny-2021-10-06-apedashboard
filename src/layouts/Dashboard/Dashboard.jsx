@@ -125,6 +125,7 @@ export default function Dashboard({account}) {
         let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
         let holdingbalance = await rewardContract1.dividendTokenBalanceOf(account)
         let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
+        let lastreward = await rewardContract.methods._holderLastSellDate(account).call()
 
         let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
 
@@ -134,6 +135,7 @@ export default function Dashboard({account}) {
           buyback: Number(buyback.toString()) / 1000000000,
           accountDividendsInfo: accountDividendsInfo,
           currentToken: currentToken,
+          lastreward: Number(lastreward.toString())
         });
 
       } catch (e) {
@@ -215,6 +217,7 @@ export default function Dashboard({account}) {
     getacc.then((value) => {
       setTokenAmount(value.holdingbalance)
       setBuyback(value.buyback)
+console.log(value.lastreward)
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
         setLastreward(new Date(Number(value.accountDividendsInfo[5].toString()) / 1000000000000000000))
