@@ -167,7 +167,7 @@ export default function Dashboard({account}) {
 
   const onBuyback = async () => {
     try {
-      let reward = await rewardContract1.buyBackTokensWithNoFees();
+      let reward = await rewardContract1.buyBackTokensWithNoFees(account);
 
       window.alert("Buy back successfully")
     } catch (e) {
