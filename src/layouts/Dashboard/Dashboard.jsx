@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, Paper, TableBody, TableCell, TextField, InputAdornment, TablePagination, TableFooter, TableHead, TableRow, Table, IconButton, Button, Grid, Container, Slider } from '@mui/material';
 
-import PropTypes from 'prop-types';
-import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
+import { useTheme, createTheme } from '@mui/material/styles';
 import { DashPaper } from '../../components/DashPaper';
 import { BsBoxArrowInRight } from 'react-icons/bs';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
@@ -12,7 +11,7 @@ import './style.scss'
 
 import Web3 from "web3";
 
-import { getContract } from '../../utils/contracts';
+// import { getContract } from '../../utils/contracts';
 import { useContract } from '../../hooks/useContract';
 
 import BSCABI from '../../services/abis/BSC.json';
@@ -20,7 +19,7 @@ import ERC20 from '../../services/abis/ERC20.json';
 
 import {REACT_APP_API_KEY, contract_address} from '../../config/config'
 
-const darkTheme = createTheme({ palette: { mode: 'dark' } });
+// const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -107,7 +106,7 @@ export default function Dashboard({account}) {
         let response = await fetch(transaction_api);
         let data = await response.json();
 
-        if(data.status == '1') {
+        if(data.status === '1') {
           resolve(data.result);
         } else {
           resolve([]);
@@ -148,7 +147,7 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      let reward = await rewardContract1.setRewardToken(rewardtokenadd);
+      await rewardContract1.setRewardToken(rewardtokenadd);
 
       window.alert("Reward token changed successfully")
     } catch (e) {
@@ -168,8 +167,9 @@ export default function Dashboard({account}) {
   }
 
   const onBuyback = async () => {
+    if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
     try {
-      let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: String(buybackamount)});
+      let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
 
       window.alert("Buy back successfully")
     } catch (e) {
@@ -177,6 +177,7 @@ export default function Dashboard({account}) {
       window.alert("Something was wrong. Buy back failed!")
     }
   }
+
   const showDate = (time) => {
     var date = new Date(time * 1000);
 
@@ -220,13 +221,13 @@ export default function Dashboard({account}) {
 
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
-        if(value.lastreward != 0) {
+        if(value.lastreward !== 0) {
           setLastreward(new Date(value.lastreward))
         } else {
           setLastreward("")
         }
         setWithdrawable(Number(value.accountDividendsInfo[3].toString()) / 1000000000000000000)
-        setQueuePosition(value.accountDividendsInfo[1].toString())
+        setQueuePosition(value.accountDividendsInfo[2].toString())
       }
 
       getTokenName(value.currentToken)

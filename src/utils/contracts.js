@@ -1,7 +1,7 @@
 import {getAddress} from '@ethersproject/address';
 import {Contract} from '@ethersproject/contracts';
 import {AddressZero} from '@ethersproject/constants';
-import {Web3Provider} from '@ethersproject/providers';
+// import {Web3Provider} from '@ethersproject/providers';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value) {
