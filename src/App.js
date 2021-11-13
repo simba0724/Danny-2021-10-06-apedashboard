@@ -36,31 +36,8 @@ let web3Modal = new Web3Modal({
 let provider;
 
 function App() {
-	// const [secureProtocolError, setSecureProtocolError] = useState(false);
-  // const [network, setNetwork] = useState(undefined);
   const { connector, chainId, activate, deactivate, error, account, active } = useWeb3React();
   const [selectedAccount, setSelectedAccount] = useState(undefined);
-  // const [balances, setBalances] = useState({});
-
-  // const clearAccountData = () => {
-  //   setNetwork(undefined);
-  //   setSelectedAccount(undefined);
-  //   setBalances({});
-  // }
-
-  // const init = () => {
-  //   if(window.location.protocol !== 'https:') {
-  //     setSecureProtocolError(true);
-  //     return;
-  //   }
-  //   const providerOptions = {};
-
-  //   web3Modal = new Web3Modal({
-  //     cacheProvider: false, // optional
-  //     providerOptions, // required
-  //     disableInjectedProvider: false,
-  //   });
-  // }
 
   const onConnect = async () => {
     try {
@@ -102,27 +79,10 @@ function App() {
 
     const web3 = new Web3(provider);
 
-    // const chainId = await web3.eth.getChainId();
-
-    // const chainData = evmChains?.getChain(chainId);
-    // setNetwork(chainData.name);
-
     const accounts = await web3.eth.getAccounts();
 
     setSelectedAccount(accounts[0]);
   }
-
-  // const onDisconnect = async () => {
-
-  //   if(provider?.close) {
-  //     await provider.close();
-
-  //     await web3Modal.clearCachedProvider();
-  //     provider = null;
-  //   }
-
-  //   clearAccountData();
-  // }
 	return (
 		<div className="App">
 			<Router>

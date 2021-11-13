@@ -132,7 +132,7 @@ export default function Dashboard({account}) {
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
           currentreward: Number(currentreward.toString()) / 1000000000,
-          buyback: Number(buyback.toString()) / 1000000000,
+          buyback: Number(buyback.toString()) / 1000000000000000000,
           accountDividendsInfo: accountDividendsInfo,
           currentToken: currentToken,
           lastreward: Number(lastreward.toString())
