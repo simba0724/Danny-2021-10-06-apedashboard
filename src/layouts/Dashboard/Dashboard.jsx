@@ -125,8 +125,6 @@ export default function Dashboard({account}) {
         let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
         let holdingbalance = await rewardContract1.dividendTokenBalanceOf(account)
         let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
-        let lastreward = await rewardContract.methods._holderLastSellDate(account).call()
-
         let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
 
         resolve({
@@ -135,7 +133,6 @@ export default function Dashboard({account}) {
           buyback: Number(buyback.toString()) / 1000000000000000000,
           accountDividendsInfo: accountDividendsInfo,
           currentToken: currentToken,
-          lastreward: Number(lastreward.toString())
         });
 
       } catch (e) {
@@ -220,9 +217,10 @@ export default function Dashboard({account}) {
       setBuyback(value.buyback)
 
       if(value.accountDividendsInfo) {
+console.log(value.accountDividendsInfo[5])
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
         if(value.lastreward !== 0) {
-          setLastreward(new Date(value.lastreward))
+          setLastreward(new Date(value.accountDividendsInfo[5].toString()))
         } else {
           setLastreward("")
         }
@@ -366,7 +364,7 @@ export default function Dashboard({account}) {
                 <Box sx={{ fontSize: "22px", paddingRight: "20px", color: "rgb(17,25,53)", fontWeight: "bold" }}>Tax Free BuyBack</Box>
                 <Box sx={{ display: "flex", paddingTop: "15px", justifyContent: "space-between", flexWrap: "wrap" }}>
                   <DashPaper title="Available BuyBack Amount" width="46%" detail={(withdrawableamount!== "undefined" ? withdrawableamount : 0)+ " BNB"} border />
-                  <Paper elevation={10} sx={{ width: "46%", backgroundColor: "#FFF", padding: '20px', border: '1px solid #f6eb15', boxShadow: 'none' }}>
+                  <Paper elevation={10} sx={{width: {xs: "100%", sm: "46%"}, backgroundColor: "#FFF", padding: '20px', border: '1px solid #f6eb15', boxShadow: 'none' }}>
                     <TextField
                       id="input-with-icon-textfield"
                       label="Buy Back Token Amount"
