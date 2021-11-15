@@ -5,7 +5,7 @@ import './style.scss';
 import { Link } from "react-router-dom";
 
 import { Modal, Box, Button, Typography } from '@mui/material';
-import {useWeb3React} from '@web3-react/core';
+import {useWeb3React, UnsupportedChainIdError} from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
@@ -32,11 +32,6 @@ const walletconnect = new WalletConnectConnector({
     pollingInterval: 12000,
 });
 
-const connectorsByName = {
-    injected: injected,
-    WalletConnect: walletconnect
-}
-
 export default function NavBar() {
   let history = useHistory();
 
@@ -58,7 +53,14 @@ export default function NavBar() {
 
   async function trustconnect() {
     try {
-      await activate(walletconnect)
+      activate(walletconnect, undefined, true)
+        .catch((error) => {
+            if (error instanceof UnsupportedChainIdError) {
+                activate(walletconnect)
+            } else {
+                console.log('Pending Error Occured')
+            }
+        })
     } catch (ex) {
       console.log("ex", ex)
     }
