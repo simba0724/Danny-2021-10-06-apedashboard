@@ -166,7 +166,7 @@ export default function Dashboard({account}) {
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
     try {
-      let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: 1*1000000000});
+      let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
 
       window.alert("Buy back successfully")
     } catch (e) {
