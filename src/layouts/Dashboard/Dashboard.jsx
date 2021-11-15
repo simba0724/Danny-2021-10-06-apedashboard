@@ -218,7 +218,8 @@ export default function Dashboard({account}) {
 
       if(value.accountDividendsInfo) {
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
-        if(value.lastreward !== 0) {
+
+        if(value.accountDividendsInfo[5] !== '0') {
           setLastreward(new Date(value.accountDividendsInfo[5].toString()))
         } else {
           setLastreward("")
