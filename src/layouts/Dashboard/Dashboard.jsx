@@ -150,7 +150,7 @@ export default function Dashboard({account}) {
       window.alert("Reward token changed successfully")
     } catch (e) {
       window.alert(e)
-      window.alert("Please Input token address")
+      // window.alert("Please Input token address")
     }
   }
 
