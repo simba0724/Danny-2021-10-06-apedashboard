@@ -24,8 +24,8 @@ const injected = new InjectedConnector({
 })
 
 const walletconnect = new WalletConnectConnector({
-    rpc:{ 56: 'https://bsc-dataseed1.binance.org' },
-    bridge: 'https://bridge.walletconnect.org',
+    rpc:{ 56: 'https://bsc-dataseed1.binance.org/' },
+    bridge: 'https://bridge.walletconnect.org/',
     qrcode: true,
     pollingInterval: 12000,
 });
@@ -107,7 +107,7 @@ export default function NavBar() {
               </Typography>
             </Box>
           </Button>
-          <Button sx={{width: '100%', padding: '20px'}} onClick={()=> {trustconnect(); handleClose(); history.push("/dashboard");}}>
+          <Button sx={{width: '100%', padding: '20px'}} onClick={()=> {trustconnect(); handleClose();}}>
             <Box>
               <img src="./walletconnect.svg" style={{width: '40px'}}/>
               <Typography variant="h5" component="h2" sx={{textAlign: 'center', color: 'black', fontWeight: '600'}}>

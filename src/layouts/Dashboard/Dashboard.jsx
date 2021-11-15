@@ -66,7 +66,7 @@ function TablePaginationActions(props) {
 export default function Dashboard() {
 
   const {account} = useWeb3React();
-
+console.log(account)
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
