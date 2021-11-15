@@ -24,8 +24,12 @@ const injected = new InjectedConnector({
 })
 
 const walletconnect = new WalletConnectConnector({
-    rpc:{ 56: 'https://bsc-dataseed1.binance.org/' },
-    bridge: 'https://bridge.walletconnect.org/',
+    rpc:{
+      56: 'https://bsc-dataseed1.binance.org/v3/60ab76e16df54c808e50a79975b4779f',
+      1: 'https://mainnet.infura.io/v3/60ab76e16df54c808e50a79975b4779f',
+      4: 'https://rinkeby.infura.io/v3/60ab76e16df54c808e50a79975b4779f'
+    },
+    bridge: 'https://bridge.walletconnect.org',
     qrcode: true,
     pollingInterval: 12000,
 });
