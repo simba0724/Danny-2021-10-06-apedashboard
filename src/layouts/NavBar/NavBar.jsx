@@ -84,7 +84,7 @@ window.alert(account)
               {accountEllipsis}
             </span>
           ) : (
-            <span style={{ padding: "0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "70px", width: "400px", height: "65%", fontSize: "14px", backgroundColor: "#f6eb15", cursor: "pointer" }} onClick={handleOpen}>
+            <span style={{ padding: "0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "70px", width: "400px", height: "65%", fontSize: "14px", backgroundColor: "#f6eb15", cursor: "pointer" }} onClick={trustconnect}>
               Connect
             </span>
           )
