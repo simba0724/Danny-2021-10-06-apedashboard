@@ -57,13 +57,14 @@ export default function NavBar() {
   async function trustconnect() {
     try {
       await activate(walletconnect)
+window.alert(account)
     } catch (ex) {
+window.alert(ex)
       console.log("ex", ex)
     }
   }
 
   useEffect(() => {
-window.alert(account)
     if (account) {
       history.push("/dashboard");
     }
