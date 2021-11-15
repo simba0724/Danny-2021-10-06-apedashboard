@@ -149,7 +149,7 @@ export default function Dashboard({account}) {
 
       window.alert("Reward token changed successfully")
     } catch (e) {
-      console.log(e)
+      window.alert(e)
       window.alert("Please Input token address")
     }
   }
