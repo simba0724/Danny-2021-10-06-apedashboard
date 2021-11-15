@@ -14,6 +14,7 @@ import Web3 from "web3";
 
 // import { getContract } from '../../utils/contracts';
 import { useContract } from '../../hooks/useContract';
+import {useWeb3React} from '@web3-react/core';
 
 import BSCABI from '../../services/abis/BSC.json';
 import ERC20 from '../../services/abis/ERC20.json';
@@ -62,7 +63,10 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function Dashboard({account}) {
+export default function Dashboard() {
+
+  const {account, connector, chainId, activate, error, active} = useWeb3React();
+
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
@@ -86,10 +90,10 @@ export default function Dashboard({account}) {
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
 
-  const rewardContract1 = useContract(contract_address, BSCABI);
+  const rewardContract = useContract(contract_address, BSCABI);
 
   const web3 = new Web3("https://bsc-dataseed1.binance.org/");
-  const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
+  // const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -122,11 +126,11 @@ export default function Dashboard({account}) {
   const getAccountInfo = async () => {
     let promise = new Promise(async (resolve, reject) => {
       try {
-        let currentreward = await rewardContract.methods.balanceOf(account).call()
-        let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
-        let holdingbalance = await rewardContract1.dividendTokenBalanceOf(account)
-        let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
-        let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
+        let currentreward = await rewardContract.balanceOf(account)
+        let buyback = await rewardContract.getBNBAvailableForHolderBuyBack(account)
+        let holdingbalance = await rewardContract.dividendTokenBalanceOf(account)
+        let currentToken = await rewardContract.getUserCurrentRewardToken(account) // get current reward token adderss
+        let accountDividendsInfo = await rewardContract.getAccountDividendsInfo(account)
 
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
@@ -145,18 +149,17 @@ export default function Dashboard({account}) {
 
   const setRewardToken = async () => {
     try {
-      await rewardContract1.setRewardToken(rewardtokenadd);
+      await rewardContract.setRewardToken(rewardtokenadd);
 
       window.alert("Reward token changed successfully")
     } catch (e) {
-      window.alert(e)
-      // window.alert("Please Input token address")
+      window.alert("Please Input token address")
     }
   }
 
   const onWithdraw = async () => {
     try {
-      let withdraw = await rewardContract1.claim();
+      let withdraw = await rewardContract.claim();
       console.log(withdraw)
       window.alert("Reward withdrawed successfully")
     } catch (e) {
@@ -167,13 +170,12 @@ export default function Dashboard({account}) {
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
     try {
-      let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
+      let reward = await rewardContract.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
 
       setBuyback(0);
       getValue();
       window.alert("Buy back successfully")
     } catch (e) {
-      console.log(e)
       window.alert("Something was wrong. Buy back failed!")
     }
   }
@@ -242,7 +244,7 @@ export default function Dashboard({account}) {
 
   return (
     <Box className = "dashboard">
-      <Box className="title" sx={{fontSize: '34px', mt: '15px'}}>
+      <Box className="title" sx={{fontSize: '30px', mt: '15px'}}>
         Welcome to BNB Shinobi Dashboard
       </Box>
       <Container maxWidth="xl">
