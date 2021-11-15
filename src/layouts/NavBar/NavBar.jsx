@@ -57,9 +57,7 @@ export default function NavBar() {
   async function trustconnect() {
     try {
       await activate(walletconnect)
-window.alert(account)
     } catch (ex) {
-window.alert(ex)
       console.log("ex", ex)
     }
   }
@@ -85,7 +83,7 @@ window.alert(ex)
               {accountEllipsis}
             </span>
           ) : (
-            <span style={{ padding: "0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "70px", width: "400px", height: "65%", fontSize: "14px", backgroundColor: "#f6eb15", cursor: "pointer" }} onClick={trustconnect}>
+            <span style={{ padding: "0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "70px", width: "400px", height: "65%", fontSize: "14px", backgroundColor: "#f6eb15", cursor: "pointer" }} onClick={handleOpen}>
               Connect
             </span>
           )
@@ -109,7 +107,7 @@ window.alert(ex)
               </Typography>
             </Box>
           </Button>
-          <Button sx={{width: '100%', padding: '20px'}} onClick={()=> {trustconnect(); handleClose();}}>
+          <Button sx={{width: '100%', padding: '20px'}} onClick={()=> {trustconnect(); handleClose(); history.push("/dashboard");}}>
             <Box>
               <img src="./walletconnect.svg" style={{width: '40px'}}/>
               <Typography variant="h5" component="h2" sx={{textAlign: 'center', color: 'black', fontWeight: '600'}}>
