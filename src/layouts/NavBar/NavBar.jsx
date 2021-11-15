@@ -29,7 +29,7 @@ const walletconnect = new WalletConnectConnector({
     },
     bridge: 'https://bridge.walletconnect.org',
     qrcode: true,
-    pollingInterval: 12000,
+    pollingInterval: 1200,
 });
 
 export default function NavBar() {
