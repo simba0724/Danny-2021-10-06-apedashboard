@@ -6,6 +6,7 @@ import { DashPaper } from '../../components/DashPaper';
 import { BsBoxArrowInRight } from 'react-icons/bs';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import './style.scss'
 
@@ -168,6 +169,8 @@ export default function Dashboard({account}) {
     try {
       let reward = await rewardContract1.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
 
+      setBuyback(0);
+      getValue();
       window.alert("Buy back successfully")
     } catch (e) {
       console.log(e)
@@ -205,7 +208,7 @@ export default function Dashboard({account}) {
     }
   }
 
-  useEffect(() => {
+  const getValue = () => {
     let data = init()
     data.then((value) => {
       setRows(value)
@@ -231,6 +234,10 @@ export default function Dashboard({account}) {
       getTokenName(value.currentToken)
       getMyBNB()
     });
+  }
+
+  useEffect(() => {
+    getValue();
   }, [account])
 
   return (
