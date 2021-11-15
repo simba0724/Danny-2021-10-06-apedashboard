@@ -63,6 +63,7 @@ export default function NavBar() {
   }
 
   useEffect(() => {
+window.alert(account)
     if (account) {
       history.push("/dashboard");
     }
