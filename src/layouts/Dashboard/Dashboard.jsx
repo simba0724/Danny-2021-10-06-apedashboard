@@ -149,8 +149,17 @@ console.log(account)
     }
 
     web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
-console.log(signed.rawTransaction)
-      // web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', console.log)
+      web3.eth.sendSignedTransaction(signed.rawTransaction).on('transactionHash', (hash)=>{
+          console.log('Hash: ', hash);
+      }).on('error', (error, receipt)=>{
+        window.alert("Something went wrong!")
+        console.error(error, receipt);
+      }).on('confirmation',(conNum, receipt)=>{
+        window.alert("Reward token changed successfully")
+        console.log(`Got confirmation #${conNum}`, receipt);
+      }).on('receipt',( receipt)=>{
+        console.log('Got receipt', receipt);
+      });
     });
     // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
     //   if (err) {
