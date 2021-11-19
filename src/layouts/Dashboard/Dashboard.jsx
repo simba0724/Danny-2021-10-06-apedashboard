@@ -58,8 +58,9 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function Dashboard({account}) {
-console.log(account)
+export default function Dashboard() {
+// console.log(account)
+let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
@@ -139,7 +140,7 @@ console.log(account)
 
   const setRewardToken = async () => {
     try {
-      await rewardContract.methods.setRewardToken(rewardtokenadd);
+      await rewardContract.methods.setRewardToken(rewardtokenadd).send();
 
       window.alert("Reward token changed successfully")
     } catch (e) {
@@ -149,7 +150,7 @@ console.log(account)
 
   const onWithdraw = async () => {
     try {
-      let withdraw = await rewardContract.methods.claim();
+      let withdraw = await rewardContract.methods.claim().send();
       console.log(withdraw)
       window.alert("Reward withdrawed successfully")
     } catch (e) {
@@ -160,7 +161,7 @@ console.log(account)
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
     try {
-      let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
+      let reward = await rewardContract.methods.buyBackTokensWithNoFees().send({from: account, value: buybackamount*1000000000000000000});
 
       setBuyback(0);
       getValue();
