@@ -139,15 +139,27 @@ console.log(account)
   }
 
   const setRewardToken = async () => {
-    rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
-      if (err) {
-        window.alert("Please Input token address")
-        throw err;
-      } else {
-        console.log(res);
-        window.alert("Reward token changed successfully")
-      }
+    let {privateKey} = web3.eth.accounts.create();
+    let encoded = rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
+
+    var tx = {
+      to : contract_address,
+      data : encoded
+    }
+
+    web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+console.log(signed.rawTransaction)
+      // web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', console.log)
     });
+    // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+    //   if (err) {
+    //     window.alert("Please Input token address")
+    //     throw err;
+    //   } else {
+    //     console.log(res);
+    //     window.alert("Reward token changed successfully")
+    //   }
+    // });
   }
 
   const onWithdraw = async () => {
