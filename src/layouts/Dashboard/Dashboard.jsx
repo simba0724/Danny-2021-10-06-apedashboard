@@ -140,9 +140,14 @@ let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
 
   const setRewardToken = async () => {
     try {
-      await rewardContract.methods.setRewardToken(rewardtokenadd).send();
-
-      window.alert("Reward token changed successfully")
+      await rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log(res);
+          window.alert("Reward token changed successfully")
+        }
+      });
     } catch (e) {
       window.alert("Please Input token address")
     }
@@ -150,9 +155,14 @@ let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
 
   const onWithdraw = async () => {
     try {
-      let withdraw = await rewardContract.methods.claim().send();
-      console.log(withdraw)
-      window.alert("Reward withdrawed successfully")
+      rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log(res);
+          window.alert("Reward withdrawed successfully")
+        }
+      });
     } catch (e) {
       window.alert("Something was wrong. Withdraw failed!")
     }
@@ -161,11 +171,16 @@ let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
     try {
-      let reward = await rewardContract.methods.buyBackTokensWithNoFees().send({from: account, value: buybackamount*1000000000000000000});
-
-      setBuyback(0);
-      getValue();
-      window.alert("Buy back successfully")
+      let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log(res);
+          setBuyback(0);
+          getValue();
+          window.alert("Buy back successfully")
+        }
+      });
     } catch (e) {
       window.alert("Something was wrong. Buy back failed!")
     }
