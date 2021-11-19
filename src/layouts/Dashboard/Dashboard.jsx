@@ -6,15 +6,10 @@ import { DashPaper } from '../../components/DashPaper';
 import { BsBoxArrowInRight } from 'react-icons/bs';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
-import RefreshIcon from '@mui/icons-material/Refresh';
 
 import './style.scss'
 
 import Web3 from "web3";
-
-// import { getContract } from '../../utils/contracts';
-import { useContract } from '../../hooks/useContract';
-import {useWeb3React} from '@web3-react/core';
 
 import BSCABI from '../../services/abis/BSC.json';
 import ERC20 from '../../services/abis/ERC20.json';
@@ -63,9 +58,7 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function Dashboard() {
-
-  const {account} = useWeb3React();
+export default function Dashboard({account}) {
 console.log(account)
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -89,11 +82,8 @@ console.log(account)
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-
-  const rewardContract = useContract(contract_address, BSCABI);
-
   const web3 = new Web3("https://bsc-dataseed1.binance.org/");
-  // const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
+  const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -126,11 +116,11 @@ console.log(account)
   const getAccountInfo = async () => {
     let promise = new Promise(async (resolve, reject) => {
       try {
-        let currentreward = await rewardContract.balanceOf(account)
-        let buyback = await rewardContract.getBNBAvailableForHolderBuyBack(account)
-        let holdingbalance = await rewardContract.dividendTokenBalanceOf(account)
-        let currentToken = await rewardContract.getUserCurrentRewardToken(account) // get current reward token adderss
-        let accountDividendsInfo = await rewardContract.getAccountDividendsInfo(account)
+        let currentreward = await rewardContract.methods.balanceOf(account).call()
+        let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
+        let holdingbalance = await rewardContract.methods.dividendTokenBalanceOf(account).call()
+        let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
+        let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
 
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
@@ -149,7 +139,7 @@ console.log(account)
 
   const setRewardToken = async () => {
     try {
-      await rewardContract.setRewardToken(rewardtokenadd);
+      await rewardContract.methods.setRewardToken(rewardtokenadd);
 
       window.alert("Reward token changed successfully")
     } catch (e) {
@@ -159,7 +149,7 @@ console.log(account)
 
   const onWithdraw = async () => {
     try {
-      let withdraw = await rewardContract.claim();
+      let withdraw = await rewardContract.methods.claim();
       console.log(withdraw)
       window.alert("Reward withdrawed successfully")
     } catch (e) {
@@ -170,7 +160,7 @@ console.log(account)
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
     try {
-      let reward = await rewardContract.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
+      let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000});
 
       setBuyback(0);
       getValue();
@@ -204,7 +194,7 @@ console.log(account)
   const getMyBNB = async () => {
     if(account) {
       const web3 = new Web3('https://bsc-dataseed1.binance.org/');
-      
+
       web3.eth.getBalance(account)
         .then(val => setBnbamount(Number(val.toString()) / (1000000000000000000)))
     }
