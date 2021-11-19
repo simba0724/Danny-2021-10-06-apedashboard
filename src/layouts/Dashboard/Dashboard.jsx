@@ -84,7 +84,8 @@ console.log(account)
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
   const web3 = new Web3("https://bsc-dataseed1.binance.org/");
-  const rewardContract = new web3.eth.Contract(BSCABI, contract_address);
+  let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
+  rewardContract.defaultAccount  = account;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
