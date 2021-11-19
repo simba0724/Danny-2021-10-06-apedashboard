@@ -59,7 +59,7 @@ function TablePaginationActions(props) {
 }
 
 export default function Dashboard({account}) {
-// console.log(account)
+console.log(account)
 // let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -139,51 +139,43 @@ export default function Dashboard({account}) {
   }
 
   const setRewardToken = async () => {
-    try {
-      await rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
-        if (err) {
-          throw err;
-        } else {
-          console.log(res);
-          window.alert("Reward token changed successfully")
-        }
-      });
-    } catch (e) {
-      window.alert("Please Input token address")
-    }
+    rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Please Input token address")
+        throw err;
+      } else {
+        console.log(res);
+        window.alert("Reward token changed successfully")
+      }
+    });
   }
 
   const onWithdraw = async () => {
-    try {
-      rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
-        if (err) {
-          throw err;
-        } else {
-          console.log(res);
-          window.alert("Reward withdrawed successfully")
-        }
-      });
-    } catch (e) {
-      window.alert("Something was wrong. Withdraw failed!")
-    }
+    rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Something was wrong. Withdraw failed!")
+        throw err;
+      } else {
+        console.log(res);
+        window.alert("Reward withdrawed successfully")
+      }
+    });
   }
 
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
-    try {
-      let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
-        if (err) {
-          throw err;
-        } else {
-          console.log(res);
-          setBuyback(0);
-          getValue();
-          window.alert("Buy back successfully")
-        }
-      });
-    } catch (e) {
-      window.alert("Something was wrong. Buy back failed!")
-    }
+
+    let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Something was wrong. Buy back failed!")
+        throw err;
+      } else {
+        console.log(res);
+        setBuyback(0);
+        getValue();
+        window.alert("Buy back successfully")
+      }
+    });
   }
 
   const showDate = (time) => {
