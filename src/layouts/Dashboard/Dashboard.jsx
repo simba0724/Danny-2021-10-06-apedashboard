@@ -139,38 +139,37 @@ console.log(account)
   }
 
   const setRewardToken = async () => {
-    let {privateKey} = web3.eth.accounts.create();
-    let encoded = rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
+    // let {privateKey} = web3.eth.accounts.create();
+    // let encoded = rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
 
-    var tx = {
-      to : contract_address,
-      data : encoded,
-      gas: '128028',
-      value: 0,
-    }
+    // var tx = {
+    //   to : contract_address,
+    //   data : encoded,
+    //   gas: '128028'
+    // }
 
-    web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
-      web3.eth.sendSignedTransaction(signed.rawTransaction).on('transactionHash', (hash)=>{
-          console.log('Hash: ', hash);
-      }).on('error', (error, receipt)=>{
-        window.alert("Something went wrong!")
-        console.error(error, receipt);
-      }).on('confirmation',(conNum, receipt)=>{
-        window.alert("Reward token changed successfully")
-        console.log(`Got confirmation #${conNum}`, receipt);
-      }).on('receipt',( receipt)=>{
-        console.log('Got receipt', receipt);
-      });
-    });
-    // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
-    //   if (err) {
-    //     window.alert("Please Input token address")
-    //     throw err;
-    //   } else {
-    //     console.log(res);
+    // web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+    //   web3.eth.sendSignedTransaction(signed.rawTransaction).on('transactionHash', (hash)=>{
+    //       console.log('Hash: ', hash);
+    //   }).on('error', (error, receipt)=>{
+    //     window.alert("Something went wrong!")
+    //     console.error(error, receipt);
+    //   }).on('confirmation',(conNum, receipt)=>{
     //     window.alert("Reward token changed successfully")
-    //   }
+    //     console.log(`Got confirmation #${conNum}`, receipt);
+    //   }).on('receipt',( receipt)=>{
+    //     console.log('Got receipt', receipt);
+    //   });
     // });
+    rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Please Input token address")
+        throw err;
+      } else {
+        console.log(res);
+        window.alert("Reward token changed successfully")
+      }
+    });
   }
 
   const onWithdraw = async () => {
