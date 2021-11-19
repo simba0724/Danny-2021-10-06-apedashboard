@@ -58,9 +58,7 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function Dashboard({account}) {
-console.log(account)
-// let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
+export default function Dashboard({account, provider}) {
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
@@ -83,9 +81,14 @@ console.log(account)
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-  const web3 = new Web3("https://bsc-dataseed1.binance.org/");
+
+  let web3 = new Web3(provider);
+  let accountInfo = web3.eth.accounts.create();
+
+  web3.eth.defaultAccount = account;
+  web3.eth.accounts.wallet.add(accountInfo.privateKey);
+
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
-  rewardContract.defaultAccount  = account;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -140,16 +143,18 @@ console.log(account)
   }
 
   const setRewardToken = async () => {
-    // let {privateKey} = web3.eth.accounts.create();
+    // let txCount = await web3.eth.getTransactionCount(account);
     // let encoded = rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
 
     // var tx = {
+    //   from: account,
     //   to : contract_address,
     //   data : encoded,
-    //   gas: '128028'
+    //   gas: 21432,
+    //   nonce: txCount
     // }
 
-    // web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+    // web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
     //   web3.eth.sendSignedTransaction(signed.rawTransaction).on('transactionHash', (hash)=>{
     //       console.log('Hash: ', hash);
     //   }).on('error', (error, receipt)=>{

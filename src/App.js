@@ -78,7 +78,7 @@ function App() {
 				<Switch>
 					<Route exact path="/" component={Landing} />
 					<Route exact path="/dashboard">
-						<Dashboard account={selectedAccount}/>
+						<Dashboard account={selectedAccount} provider={provider}/>
 					</Route>
 				</Switch>
 			</Router>
