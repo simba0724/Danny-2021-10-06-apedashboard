@@ -147,7 +147,6 @@ console.log(account)
       data : encoded,
       gas: 2000000,
       value: 0,
-      gasPrice: 0,
     }
 
     web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
