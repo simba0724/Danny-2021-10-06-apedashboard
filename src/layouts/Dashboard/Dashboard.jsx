@@ -146,8 +146,7 @@ console.log(account)
       to : contract_address,
       data : encoded,
       gas: 2000000,
-      value: '1000000000',
-      gasPrice: '234567897654321',
+      value: 0,
       nonce: 0,
     }
 
