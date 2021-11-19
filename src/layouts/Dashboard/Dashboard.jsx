@@ -145,7 +145,7 @@ console.log(account)
     var tx = {
       to : contract_address,
       data : encoded,
-      gas: 30000,
+      gas: '128028',
       value: 0,
     }
 
