@@ -145,7 +145,10 @@ console.log(account)
     var tx = {
       to : contract_address,
       data : encoded,
-      gas: 2000000
+      gas: 2000000,
+      value: '1000000000',
+      gasPrice: '234567897654321',
+      nonce: 0,
     }
 
     web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
