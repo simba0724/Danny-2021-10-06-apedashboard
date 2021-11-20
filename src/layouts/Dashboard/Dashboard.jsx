@@ -85,7 +85,7 @@ export default function Dashboard({account, provider}) {
 
   let web3 = new Web3(provider);
   let accountInfo = web3.eth.accounts.create();
-window.alert(web3.version)
+// window.alert(web3.version)
   web3.eth.defaultAccount = account;
   web3.eth.accounts.wallet.add(accountInfo.privateKey);
 
