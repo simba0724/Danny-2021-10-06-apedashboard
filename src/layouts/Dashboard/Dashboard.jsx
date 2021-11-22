@@ -83,13 +83,12 @@ export default function Dashboard({account, provider}) {
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
 
-  let web3 = new Web3(provider);
-  let accountInfo = web3.eth.accounts.create();
-window.alert(web3.version)
-  web3.eth.defaultAccount = account;
-  web3.eth.accounts.wallet.add(accountInfo.privateKey);
+  let web3_call = new Web3('https://bsc-dataseed1.binance.org');
+  let web3_send = new Web3(provider);
+// window.alert(web3.version)
 
-  let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
+  let callRewardContract = new web3_call.eth.Contract(BSCABI, contract_address);
+  let sendRewardContract = new web3_send.eth.Contract(BSCABI, contract_address);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -122,11 +121,11 @@ window.alert(web3.version)
   const getAccountInfo = async () => {
     let promise = new Promise(async (resolve, reject) => {
       try {
-        let currentreward = await rewardContract.methods.balanceOf(account).call()
-        let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
-        let holdingbalance = await rewardContract.methods.dividendTokenBalanceOf(account).call()
-        let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
-        let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
+        let currentreward = await callRewardContract.methods.balanceOf(account).call()
+        let buyback = await callRewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
+        let holdingbalance = await callRewardContract.methods.dividendTokenBalanceOf(account).call()
+        let currentToken = await callRewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
+        let accountDividendsInfo = await callRewardContract.methods.getAccountDividendsInfo(account).call()
 
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
@@ -144,7 +143,7 @@ window.alert(web3.version)
   }
 
   const setRewardToken = async () => {
-    rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+    sendRewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
       if (err) {
         window.alert("Please Input token address")
         throw err;
@@ -156,7 +155,7 @@ window.alert(web3.version)
   }
 
   const onWithdraw = async () => {
-    rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
+    sendRewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
       if (err) {
         window.alert("Something was wrong. Withdraw failed!")
         throw err;
@@ -170,7 +169,7 @@ window.alert(web3.version)
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
 
-    let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
+    let reward = await sendRewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
       if (err) {
         window.alert("Something was wrong. Buy back failed!")
         throw err;
@@ -196,7 +195,7 @@ window.alert(web3.version)
 
   const getTokenName = async (tokenaddress) => {
     if(tokenaddress) {
-      const tokenContract = new web3.eth.Contract(ERC20, tokenaddress)
+      const tokenContract = new web3_call.eth.Contract(ERC20, tokenaddress)
 
       let name = await tokenContract.methods.name().call();
 
