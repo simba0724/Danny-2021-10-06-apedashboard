@@ -58,8 +58,8 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function Dashboard({account, provider}) {
-
+export default function Dashboard({provider}) {
+let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
