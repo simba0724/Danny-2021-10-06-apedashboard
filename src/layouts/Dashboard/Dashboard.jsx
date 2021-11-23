@@ -152,8 +152,7 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasLimit: web3.utils.toHex(300000),
-      value: 0
+      gasLimit: web3.utils.toHex(300000)
     }
 
     web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
@@ -182,8 +181,7 @@ console.log(signed)
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasLimit: web3.utils.toHex(300000),
-      value: 0
+      gasLimit: web3.utils.toHex(300000)
     }
 
     web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
@@ -213,8 +211,7 @@ console.log(signed)
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasLimit: web3.utils.toHex(300000),
-      value: 0
+      gasLimit: web3.utils.toHex(300000)
     }
 
     web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
