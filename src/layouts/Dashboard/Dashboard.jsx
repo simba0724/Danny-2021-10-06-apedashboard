@@ -82,9 +82,8 @@ export default function Dashboard({account, provider}) {
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-
-  let web3 = new Web3('https://bsc-dataseed1.binance.org/');
-  // let web3 = new Web3(provider);
+  // let web3 = new Web3('https://bsc-dataseed1.binance.org/');
+  let web3 = new Web3(provider);
   let accountInfo = web3.eth.accounts.create();
 // window.alert(web3.version)
 
