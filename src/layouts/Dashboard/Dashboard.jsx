@@ -170,25 +170,25 @@ export default function Dashboard({account, provider}) {
     }
 
     const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
-    var tx = new Tx(rawTx, {'common': BSC_FORK});
-    tx.sign(privateKey);
+    // var tx = new Tx(rawTx, {'common': BSC_FORK});
+    // tx.sign(privateKey);
 
-    var serializedTx = tx.serialize();
+    // var serializedTx = tx.serialize();
 
-    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-      .on('receipt', function(res) {
-        console.log(res)
+    // web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    //   .on('receipt', function(res) {
+    //     console.log(res)
+    //   });
+
+    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
+      web3.eth.accounts.signTransaction(rawTx, privateKey).then(signed => {
+console.log(signed)
+        web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
+          console.log(res);
+          window.alert("Reward token changed successfully")
+        })
       });
-
-    // web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
-    //   web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
-    //     console.log(res);
-    //     window.alert("Reward token changed successfully")
-    //   })
-    // });
-
-    // rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
-    // });
+    });
     // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
     //   if (err) {
     //     window.alert("Please Input token address")
