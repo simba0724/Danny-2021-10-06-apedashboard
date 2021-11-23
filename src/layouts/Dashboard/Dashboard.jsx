@@ -148,14 +148,13 @@ export default function Dashboard({account, provider}) {
     let encoded = await rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
     let count = await web3.eth.getBlockNumber()
 
-    rewardContract.methods.setRewardToken(123).rewardtokenadd({gas: 5000000}, function(error, gasAmount){
+    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({gas: 5000000}, function(error, gasAmount){
       var tx = {
         nonce: web3.utils.toHex(count),
         to : contract_address,
         data : encoded,
-        gas: gasAmount,
+        gas: web3.utils.toHex(100000000),
       }
-
       web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
         web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
           console.log(res);
