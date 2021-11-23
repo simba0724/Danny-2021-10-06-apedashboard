@@ -182,14 +182,14 @@ console.log(gasPrice)
     rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}).then(function(gasAmount){
       console.log("[count]=>", count)
       console.log("[gasAmount]=>", gasAmount)
-      console.log("[from]=>", account)
-      console.log("[to]=>", contract_address)
+      console.log("[from]=>", account.toLowerCase())
+      console.log("[to]=>", contract_address.toLowerCase())
       console.log("[gasAmount]=>", gasAmount)
       console.log("[gas]=>", 210000 * gasPrice / 10e18)
       var rawTx = {
         nonce: web3.utils.toHex(count),
-        to : contract_address,
-        from: account,
+        to : contract_address.toLowerCase(),
+        from: account.toLowerCase(),
         data : encoded,
         // gas: web3.utils.toHex(gasAmount),
         gasPrice: web3.utils.toHex(gasPrice),
