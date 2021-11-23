@@ -159,45 +159,45 @@ console.log(accountInfo)
     let count = await web3.eth.getTransactionCount(account)
     let gasPrice = await web3.eth.getGasPrice();
 
-    var rawTx = {
-      nonce: web3.utils.toHex(count),
-      to : contract_address,
-      data : encoded,
-      gasLimit: web3.utils.toHex(100000),
-      gasPrice: web3.utils.toHex(gasPrice),
-      value: 0
-    }
+    // var rawTx = {
+    //   nonce: web3.utils.toHex(count),
+    //   to : contract_address,
+    //   data : encoded,
+    //   gasLimit: web3.utils.toHex(100000),
+    //   gasPrice: web3.utils.toHex(gasPrice),
+    //   value: 0
+    // }
 
-    const privateKey = Buffer.from(accountInfo.privateKey.replace('0x',''), 'hex')
-    var tx = new Tx(rawTx, {'common': BSC_FORK});
-    tx.sign(privateKey);
+    // const privateKey = Buffer.from(accountInfo.privateKey.replace('0x',''), 'hex')
+    // var tx = new Tx(rawTx, {'common': BSC_FORK});
+    // tx.sign(privateKey);
 
-    var serializedTx = tx.serialize();
+    // var serializedTx = tx.serialize();
 
-    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-      .on('receipt', function(res) {
-        console.log(res)
-        window.alert("Reward token changed successfully")
-      });
-
-    // rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
-    //   var rawTx = {
-    //     nonce: count,
-    //     to : contract_address,
-    //     data : encoded,
-    //     gasLimit: 100000,
-    //     gas: gasAmount,
-    //     gasPrice: gasPrice,
-    //     value: 0
-    //   }
-
-    //   web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
-    //     web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
-    //       console.log(res);
-    //       window.alert("Reward token changed successfully")
-    //     })
+    // web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    //   .on('receipt', function(res) {
+    //     console.log(res)
+    //     window.alert("Reward token changed successfully")
     //   });
-    // });
+
+    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
+      var rawTx = {
+        nonce: count,
+        to : contract_address,
+        data : encoded,
+        gasLimit: web3.utils.toHex(100000),
+        gas: web3.utils.toHex(gasAmount),
+        gasPrice: web3.utils.toHex(gasPrice),
+        value: 0
+      }
+
+      web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
+        web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
+          console.log(res);
+          window.alert("Reward token changed successfully")
+        })
+      });
+    });
     // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
     //   if (err) {
     //     window.alert("Please Input token address")
