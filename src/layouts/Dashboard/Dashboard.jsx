@@ -228,7 +228,8 @@ let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
 
         if(value.accountDividendsInfo[5] !== '0') {
-          setLastreward(new Date(value.accountDividendsInfo[5].toString()))
+          let today = Number(new Date());
+          setLastreward(new Date(today - Number(value.accountDividendsInfo[5])))
         } else {
           setLastreward("")
         }
