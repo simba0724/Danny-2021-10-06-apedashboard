@@ -145,15 +145,33 @@ export default function Dashboard({account, provider}) {
   }
 
   const setRewardToken = async () => {
-    rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
-      if (err) {
-        window.alert("Please Input token address")
-        throw err;
-      } else {
+    let encoded = await rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
+    let count = await web3.eth.getBlockNumber()
+
+    var tx = {
+      nonce: web3.utils.toHex(count),
+      to : contract_address,
+      data : encoded,
+      gasPrice: web3.utils.toHex(100000000000),
+      gasLimit: web3.utils.toHex(300000),
+      value: 0
+    }
+
+    web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+      web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
         console.log(res);
         window.alert("Reward token changed successfully")
-      }
+      })
     });
+    // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+    //   if (err) {
+    //     window.alert("Please Input token address")
+    //     throw err;
+    //   } else {
+    //     console.log(res);
+    //     window.alert("Reward token changed successfully")
+    //   }
+    // });
   }
 
   const onWithdraw = async () => {
