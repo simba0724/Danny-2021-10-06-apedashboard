@@ -169,7 +169,7 @@ export default function Dashboard({account, provider}) {
       value: 0
     }
 
-    const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
+    // const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
     // var tx = new Tx(rawTx, {'common': BSC_FORK});
     // tx.sign(privateKey);
 
@@ -181,7 +181,7 @@ export default function Dashboard({account, provider}) {
     //   });
 
     rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
-      web3.eth.accounts.signTransaction(rawTx, privateKey).then(signed => {
+      web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
 console.log(signed)
         web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
           console.log(res);
