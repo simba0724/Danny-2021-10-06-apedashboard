@@ -152,11 +152,11 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gas: web3.utils.toHex(100000000)
+      gas: web3.utils.toHex(100000000),
+      value: web3.toWei(5)
     }
 
     web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
-console.log(signed)
       web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
         console.log(res);
         window.alert("Reward token changed successfully")
