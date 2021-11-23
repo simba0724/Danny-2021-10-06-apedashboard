@@ -157,7 +157,7 @@ export default function Dashboard({account, provider}) {
       value: 0
     }
 
-    web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+    web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
       web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
         console.log(res);
         window.alert("Reward token changed successfully")
