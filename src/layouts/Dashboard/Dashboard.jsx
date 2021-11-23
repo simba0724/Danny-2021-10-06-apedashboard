@@ -160,7 +160,7 @@ export default function Dashboard({account, provider}) {
     let gasPrice = await web3.eth.getGasPrice();
 
     var rawTx = {
-      nonce: count,
+      nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
       gasLimit: 100000,
