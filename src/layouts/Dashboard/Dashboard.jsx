@@ -86,7 +86,7 @@ export default function Dashboard({account, provider}) {
   let web3 = new Web3(provider);
   let accountInfo = web3.eth.accounts.create();
 // window.alert(web3.version)
-
+console.log(accountInfo)
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   var Tx = require('ethereumjs-tx').Transaction;
@@ -168,9 +168,9 @@ export default function Dashboard({account, provider}) {
       value: 0
     }
 
-    const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
+    const privateKey = Buffer.from(accountInfo.privateKey.replace('0x',''), 'hex')
     var tx = new Tx(rawTx, {'common': BSC_FORK});
-    tx.sign(accountInfo.privateKey);
+    tx.sign(privateKey);
 
     var serializedTx = tx.serialize();
 
