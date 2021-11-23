@@ -90,6 +90,7 @@ export default function Dashboard({account, provider}) {
 
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
+  var Tx = require('ethereumjs-tx').Transaction;
   const Common = require('ethereumjs-common').default
   const BSC_FORK = Common.forCustomChain(
     'mainnet',
@@ -159,36 +160,36 @@ export default function Dashboard({account, provider}) {
     let count = await web3.eth.getTransactionCount(account)
     let gasPrice = await web3.eth.getGasPrice();
 
-    var rawTx = {
-      nonce: count,
-      to : contract_address,
-      data : encoded,
-      gasLimit: 100000,
-      gasPrice: gasPrice,
-      value: 0
-    }
-
     // const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
-    var Tx = require('ethereumjs-tx').Transaction;
-    var tx = new Tx(rawTx, {'common': BSC_FORK});
-    tx.sign(accountInfo.privateKey);
+    // var tx = new Tx(rawTx, {'common': BSC_FORK});
+    // tx.sign(accountInfo.privateKey);
 
-    var serializedTx = tx.serialize();
+    // var serializedTx = tx.serialize();
 
-    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-      .on('receipt', function(res) {
-        console.log(res)
+    // web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    //   .on('receipt', function(res) {
+    //     console.log(res)
+    //   });
+
+    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
+      var rawTx = {
+        nonce: count,
+        to : contract_address,
+        data : encoded,
+        gasLimit: 100000,
+        gas: gasAmount,
+        gasPrice: gasPrice,
+        value: 0
+      }
+
+      web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
+console.log(signed)
+        web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
+          console.log(res);
+          window.alert("Reward token changed successfully")
+        })
       });
-
-//     rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
-//       web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
-// console.log(signed)
-//         web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
-//           console.log(res);
-//           window.alert("Reward token changed successfully")
-//         })
-//       });
-//     });
+    });
     // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
     //   if (err) {
     //     window.alert("Please Input token address")
