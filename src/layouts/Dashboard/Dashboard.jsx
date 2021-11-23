@@ -152,7 +152,6 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasPrice: web3.utils.toHex(100000000000),
       gasLimit: web3.utils.toHex(300000),
       value: 0
     }
@@ -182,7 +181,6 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasPrice: web3.utils.toHex(100000000000),
       gasLimit: web3.utils.toHex(300000),
       value: 0
     }
@@ -214,7 +212,6 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasPrice: web3.utils.toHex(100000000000),
       gasLimit: web3.utils.toHex(300000),
       value: 0
     }
