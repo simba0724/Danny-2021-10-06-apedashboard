@@ -180,7 +180,7 @@ console.log(gasPrice)
     //     window.alert("Reward token changed successfully")
     //   });
 
-    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}).then(function(error, gasAmount){
+    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}).then(function(gasAmount){
       console.log("[count]=>", count)
       console.log("[gasAmount]=>", gasAmount)
       var rawTx = {
