@@ -86,7 +86,6 @@ export default function Dashboard({account, provider}) {
   // let web3 = new Web3(provider);
   let accountInfo = web3.eth.accounts.create();
 // window.alert(web3.version)
-console.log(accountInfo)
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   var Tx = require('ethereumjs-tx').Transaction;
@@ -156,7 +155,7 @@ console.log(accountInfo)
 
   const setRewardToken = async () => {
     let encoded = await rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
-    let count = await web3.eth.getTransactionCount(contract_address)
+    let count = await web3.eth.getTransactionCount(contract_address, 'pending')
     let gasPrice = await web3.eth.getGasPrice();
 console.log(gasPrice)
     // var rawTx = {
@@ -183,20 +182,28 @@ console.log(gasPrice)
     rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}).then(function(gasAmount){
       console.log("[count]=>", count)
       console.log("[gasAmount]=>", gasAmount)
+      console.log("[gas]=>", 210000 * gasPrice / 10e18)
       var rawTx = {
         nonce: web3.utils.toHex(count),
         to : contract_address,
+        from: account,
         data : encoded,
-        gasPrice: web3.utils.toHex(100000000000),
-        gasLimit: web3.utils.toHex(300000),
+        gas: web3.utils.toHex(gasAmount),
+        // gasPrice: web3.utils.toHex(gasPrice),
+        // gasLimit: web3.utils.toHex(300000),
         value: 0
       }
 
       web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
-        web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
-          console.log(res);
-          window.alert("Reward token changed successfully")
-        })
+        console.log("signed=>", signed)
+        web3.eth.sendSignedTransaction(signed.rawTransaction)
+          .on('receipt', function(res) {
+            console.log(res);
+            window.alert("Reward token changed successfully")
+          })
+          .on('error', function(res) {
+            console.log(res);
+          })
       });
     });
     // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
