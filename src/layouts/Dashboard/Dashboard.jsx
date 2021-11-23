@@ -87,21 +87,10 @@ export default function Dashboard({account, provider}) {
   // let web3 = new Web3(provider);
   let accountInfo = web3.eth.accounts.create();
 // window.alert(web3.version)
+  web3.eth.defaultAccount = account;
+  web3.eth.accounts.wallet.add(accountInfo.privateKey);
 
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
-
-  const Tx = require("ethereumjs-tx").Transaction
-  const Common = require('ethereumjs-common').default
-  const BSC_FORK = Common.forCustomChain(
-    'mainnet',
-    {
-      name: 'Binance Smart Chain Main Net',
-      networkId: 56,
-      chainId: 56,
-      url: 'https://bsc-dataseed1.binance.org/'
-    },
-    'istanbul',
-  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -156,36 +145,15 @@ export default function Dashboard({account, provider}) {
   }
 
   const setRewardToken = async () => {
-    let nonce = await web3.eth.getBlockNumber()
-
-    const rawTx = {
-      nonce: web3.utils.toHex(nonce),
-      gasPrice: web3.utils.toHex(100000000000),
-      gasLimit: web3.utils.toHex(300000),
-      from: contract_address,
-      to: account,
-      value: 0,
-    }
-
-    const tx = new Tx(rawTx, { 'common': BSC_FORK });
-
-    tx.sign(accountInfo.privateKey);
-    const serializedTx = tx.serialize();
-
-    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-      .on('receipt', () => {
-        console.log("Fdasfdsafdsa");
+    rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Please Input token address")
+        throw err;
+      } else {
+        console.log(res);
         window.alert("Reward token changed successfully")
-      })
-    // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
-    //   if (err) {
-    //     window.alert("Please Input token address")
-    //     throw err;
-    //   } else {
-    //     console.log(res);
-    //     window.alert("Reward token changed successfully")
-    //   }
-    // });
+      }
+    });
   }
 
   const onWithdraw = async () => {
