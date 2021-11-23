@@ -157,7 +157,7 @@ export default function Dashboard({account, provider}) {
 
   const setRewardToken = async () => {
     let encoded = await rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
-    let count = await web3.eth.getBlockNumber()
+    let count = await web3.eth.getTransactionCount(account)
     let gasPrice = await web3.eth.getGasPrice();
 
     var rawTx = {
