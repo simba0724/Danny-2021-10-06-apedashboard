@@ -168,7 +168,7 @@ console.log(accountInfo)
     //   value: 0
     // }
 
-    // const privateKey = Buffer.from(accountInfo.privateKey.replace('0x',''), 'hex')
+    const privateKey = Buffer.from(accountInfo.privateKey.replace('0x',''), 'hex')
     // var tx = new Tx(rawTx, {'common': BSC_FORK});
     // tx.sign(privateKey);
 
@@ -191,7 +191,7 @@ console.log(accountInfo)
         value: 0
       }
 
-      web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
+      web3.eth.accounts.signTransaction(rawTx, privateKey).then(signed => {
         web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
           console.log(res);
           window.alert("Reward token changed successfully")
