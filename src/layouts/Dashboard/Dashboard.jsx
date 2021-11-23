@@ -89,7 +89,7 @@ export default function Dashboard({account, provider}) {
 
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
-  var Tx = require('ethereumjs-tx').Transaction;
+  var Tx = require('ethereumjs-tx');
   const Common = require('ethereumjs-common').default
   const BSC_FORK = Common.forCustomChain(
     'mainnet',
@@ -102,6 +102,7 @@ export default function Dashboard({account, provider}) {
     'istanbul',
   );
 
+console.log(Tx)
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   };

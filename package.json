@@ -25,6 +25,8 @@
     "bscscan-api": "^1.0.1",
     "env-cmd": "^10.1.0",
     "eslint-visitor-keys": "^3.0.0",
+    "ethereumjs-common": "^1.5.2",
+    "ethereumjs-tx": "^2.1.2",
     "evm-chains": "^0.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
