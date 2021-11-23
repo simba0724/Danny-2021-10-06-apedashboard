@@ -87,12 +87,21 @@ export default function Dashboard({account, provider}) {
   // let web3 = new Web3(provider);
   let accountInfo = web3.eth.accounts.create();
 // window.alert(web3.version)
-  web3.eth.defaultAccount = account;
-  web3.eth.accounts.wallet.add(accountInfo.privateKey);
 
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
   var Tx = require('ethereumjs-tx').Transaction;
+  const Common = require('ethereumjs-common').default
+  const BSC_FORK = Common.forCustomChain(
+    'mainnet',
+    {
+      name: 'Binance Smart Chain Main Net',
+      networkId: 56,
+      chainId: 56,
+      url: 'https://bsc-dataseed1.binance.org/'
+    },
+    'istanbul',
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -160,8 +169,9 @@ export default function Dashboard({account, provider}) {
       value: 0
     }
 
-    var tx = new Tx(rawTx, {'chain':'bscmainnet'});
-    tx.sign(accountInfo.privateKey);
+    const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
+    var tx = new Tx(rawTx, {'common': BSC_FORK});
+    tx.sign(privateKey);
 
     var serializedTx = tx.serialize();
 
