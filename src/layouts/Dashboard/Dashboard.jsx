@@ -186,7 +186,7 @@ console.log(accountInfo)
         to : contract_address,
         data : encoded,
         gasLimit: web3.utils.toHex(300000),
-        gas: web3.utils.toHex(10000000000),
+        gas: web3.utils.toHex(10000000000000),
         gasPrice: web3.utils.toHex(gasPrice),
         value: 0
       }
