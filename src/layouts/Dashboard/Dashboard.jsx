@@ -167,7 +167,7 @@ export default function Dashboard({account, provider}) {
       gasPrice: gasPrice,
       value: 0
     }
-
+console.log(Tx)
     const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
     var tx = Tx(rawTx, {'common': BSC_FORK});
     tx.sign(accountInfo.privateKey);
