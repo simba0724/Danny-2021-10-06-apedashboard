@@ -164,7 +164,7 @@ export default function Dashboard({account, provider}) {
       nonce: count,
       to : contract_address,
       data : encoded,
-      gasLimit: '0x2710',
+      gasLimit: 100000,
       gasPrice: gasPrice,
       value: 0
     }
