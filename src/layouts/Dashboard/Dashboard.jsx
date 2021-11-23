@@ -152,6 +152,7 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
+      gas: web3.utils.toHex(100000000000)
     }
 
     web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
