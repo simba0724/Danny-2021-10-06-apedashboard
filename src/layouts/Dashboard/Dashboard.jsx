@@ -170,7 +170,7 @@ console.log(Tx)
     }
 
     const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
-    var tx = new Tx(rawTx, {'common': BSC_FORK});
+    var tx = Tx(rawTx, {'common': BSC_FORK});
     tx.sign(accountInfo.privateKey);
 
     var serializedTx = tx.serialize();
