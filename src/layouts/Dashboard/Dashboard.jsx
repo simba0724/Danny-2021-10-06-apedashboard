@@ -163,11 +163,11 @@ export default function Dashboard({account, provider}) {
       nonce: web3.utils.toHex(count),
       to : contract_address,
       data : encoded,
-      gasLimit: 100000,
-      gasPrice: gasPrice,
+      gasLimit: web3.utils.toHex(100000),
+      gasPrice: web3.utils.toHex(gasPrice),
       value: 0
     }
-console.log(Tx)
+
     const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
     var tx = new Tx(rawTx, {'common': BSC_FORK});
     tx.sign(accountInfo.privateKey);
