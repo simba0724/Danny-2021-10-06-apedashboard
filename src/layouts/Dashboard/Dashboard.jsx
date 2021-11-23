@@ -153,7 +153,7 @@ export default function Dashboard({account, provider}) {
       to : contract_address,
       data : encoded,
       gas: web3.utils.toHex(100000000),
-      value: web3.toWei(5)
+      value: web3.toWei(5, "ether")
     }
 
     web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
