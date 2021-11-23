@@ -186,12 +186,13 @@ console.log(accountInfo)
         to : contract_address,
         data : encoded,
         gasLimit: web3.utils.toHex(300000),
-        gas: web3.utils.toHex(100000000000000000000),
+        gas: web3.utils.toHex(23165454),
         gasPrice: web3.utils.toHex(gasPrice),
         value: 0
       }
 
       web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
+console.log(signed)
         web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
           console.log(res);
           window.alert("Reward token changed successfully")
