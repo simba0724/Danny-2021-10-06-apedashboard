@@ -175,31 +175,70 @@ export default function Dashboard({account, provider}) {
   }
 
   const onWithdraw = async () => {
-    rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
-      if (err) {
-        window.alert("Something was wrong. Withdraw failed!")
-        throw err;
-      } else {
+    let encoded = await rewardContract.methods.claim().encodeABI()
+    let count = await web3.eth.getBlockNumber()
+
+    var tx = {
+      nonce: web3.utils.toHex(count),
+      to : contract_address,
+      data : encoded,
+      gasPrice: web3.utils.toHex(100000000000),
+      gasLimit: web3.utils.toHex(300000),
+      value: 0
+    }
+
+    web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
+      web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
         console.log(res);
         window.alert("Reward withdrawed successfully")
-      }
+      })
     });
+    // rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
+    //   if (err) {
+    //     window.alert("Something was wrong. Withdraw failed!")
+    //     throw err;
+    //   } else {
+    //     console.log(res);
+    //     window.alert("Reward withdrawed successfully")
+    //   }
+    // });
   }
 
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
 
-    let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
-      if (err) {
-        window.alert("Something was wrong. Buy back failed!")
-        throw err;
-      } else {
+    let encoded = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).encodeABI()
+    let count = await web3.eth.getBlockNumber()
+
+    var tx = {
+      nonce: web3.utils.toHex(count),
+      to : contract_address,
+      data : encoded,
+      gasPrice: web3.utils.toHex(100000000000),
+      gasLimit: web3.utils.toHex(300000),
+      value: 0
+    }
+
+    web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
+      web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
         console.log(res);
         setBuyback(0);
         getValue();
         window.alert("Buy back successfully")
-      }
+      })
     });
+
+    // let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
+    //   if (err) {
+    //     window.alert("Something was wrong. Buy back failed!")
+    //     throw err;
+    //   } else {
+    //     console.log(res);
+    //     setBuyback(0);
+    //     getValue();
+    //     window.alert("Buy back successfully")
+    //   }
+    // });
   }
 
   const showDate = (time) => {
