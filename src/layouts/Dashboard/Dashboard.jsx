@@ -156,9 +156,9 @@ console.log(accountInfo)
 
   const setRewardToken = async () => {
     let encoded = await rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
-    let count = await web3.eth.getTransactionCount(account)
+    let count = await web3.eth.getTransactionCount(contract_address)
     let gasPrice = await web3.eth.getGasPrice();
-
+console.log(gasPrice)
     // var rawTx = {
     //   nonce: web3.utils.toHex(count),
     //   to : contract_address,
@@ -180,19 +180,19 @@ console.log(accountInfo)
     //     window.alert("Reward token changed successfully")
     //   });
 
-    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}, function(error, gasAmount){
+    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}).then(function(error, gasAmount){
+      console.log("[count]=>", count)
+      console.log("[gasAmount]=>", gasAmount)
       var rawTx = {
-        nonce: count,
+        nonce: web3.utils.toHex(count),
         to : contract_address,
         data : encoded,
+        gasPrice: web3.utils.toHex(100000000000),
         gasLimit: web3.utils.toHex(300000),
-        gas: web3.utils.toHex(gasAmount + 20000),
-        gasPrice: web3.utils.toHex(gasPrice),
         value: 0
       }
 
       web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
-console.log(signed)
         web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
           console.log(res);
           window.alert("Reward token changed successfully")
