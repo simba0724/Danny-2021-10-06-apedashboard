@@ -90,7 +90,6 @@ export default function Dashboard({account, provider}) {
 
   let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
-  var Tx = require('ethereumjs-tx').Transaction;
   const Common = require('ethereumjs-common').default
   const BSC_FORK = Common.forCustomChain(
     'mainnet',
@@ -170,6 +169,7 @@ export default function Dashboard({account, provider}) {
     }
 
     // const privateKey = Buffer.from(accountInfo.privateKey, 'hex')
+    var Tx = require('ethereumjs-tx').Transaction;
     var tx = new Tx(rawTx, {'common': BSC_FORK});
     tx.sign(accountInfo.privateKey);
 
