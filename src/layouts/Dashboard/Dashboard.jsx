@@ -185,7 +185,7 @@ console.log(accountInfo)
         nonce: count,
         to : contract_address,
         data : encoded,
-        gasLimit: web3.utils.toHex(100000),
+        gasLimit: web3.utils.toHex(80000),
         gas: web3.utils.toHex(gasAmount),
         gasPrice: web3.utils.toHex(gasPrice),
         value: 0
