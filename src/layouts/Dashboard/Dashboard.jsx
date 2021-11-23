@@ -59,7 +59,7 @@ function TablePaginationActions(props) {
 }
 
 export default function Dashboard({account, provider}) {
-// let account = '0x0eA033cDd2288552E98E2AfC809Bad3333c095A6';
+
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');
@@ -82,24 +82,13 @@ export default function Dashboard({account, provider}) {
 
   const transaction_api = "https://api.bscscan.com/api?module=account&action=txlistinternal&address="+account+"&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=" + REACT_APP_API_KEY
 
-  let web3 = new Web3('https://bsc-dataseed1.binance.org/');
-  // let web3 = new Web3(provider);
-  let accountInfo = web3.eth.accounts.create();
-// window.alert(web3.version)
-  let rewardContract = new web3.eth.Contract(BSCABI, contract_address);
 
-  var Tx = require('ethereumjs-tx').Transaction;
-  const Common = require('ethereumjs-common').default
-  const BSC_FORK = Common.forCustomChain(
-    'mainnet',
-    {
-      name: 'Binance Smart Chain Main Net',
-      networkId: 56,
-      chainId: 56,
-      url: 'https://bsc-dataseed1.binance.org/'
-    },
-    'istanbul',
-  );
+  let web3_call = new Web3('https://bsc-dataseed1.binance.org');
+  let web3_send = new Web3(provider);
+// window.alert(web3.version)
+
+  let callRewardContract = new web3_call.eth.Contract(BSCABI, contract_address);
+  let sendRewardContract = new web3_send.eth.Contract(BSCABI, contract_address);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -132,11 +121,11 @@ export default function Dashboard({account, provider}) {
   const getAccountInfo = async () => {
     let promise = new Promise(async (resolve, reject) => {
       try {
-        let currentreward = await rewardContract.methods.balanceOf(account).call()
-        let buyback = await rewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
-        let holdingbalance = await rewardContract.methods.dividendTokenBalanceOf(account).call()
-        let currentToken = await rewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
-        let accountDividendsInfo = await rewardContract.methods.getAccountDividendsInfo(account).call()
+        let currentreward = await callRewardContract.methods.balanceOf(account).call()
+        let buyback = await callRewardContract.methods.getBNBAvailableForHolderBuyBack(account).call()
+        let holdingbalance = await callRewardContract.methods.dividendTokenBalanceOf(account).call()
+        let currentToken = await callRewardContract.methods.getUserCurrentRewardToken(account).call() // get current reward token adderss
+        let accountDividendsInfo = await callRewardContract.methods.getAccountDividendsInfo(account).call()
 
         resolve({
           holdingbalance: Number(holdingbalance.toString()) / 1000000000,
@@ -154,133 +143,43 @@ export default function Dashboard({account, provider}) {
   }
 
   const setRewardToken = async () => {
-    let encoded = await rewardContract.methods.setRewardToken(rewardtokenadd).encodeABI()
-    let count = await web3.eth.getTransactionCount(contract_address, 'pending')
-    let gasPrice = await web3.eth.getGasPrice();
-console.log(gasPrice)
-    // var rawTx = {
-    //   nonce: web3.utils.toHex(count),
-    //   to : contract_address,
-    //   data : encoded,
-    //   gasLimit: web3.utils.toHex(100000),
-    //   gasPrice: web3.utils.toHex(gasPrice),
-    //   value: 0
-    // }
-
-    // const privateKey = Buffer.from(accountInfo.privateKey.replace('0x',''), 'hex')
-    // var tx = new Tx(rawTx, {'common': BSC_FORK});
-    // tx.sign(privateKey);
-
-    // var serializedTx = tx.serialize();
-
-    // web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-    //   .on('receipt', function(res) {
-    //     console.log(res)
-    //     window.alert("Reward token changed successfully")
-    //   });
-
-    rewardContract.methods.setRewardToken(rewardtokenadd).estimateGas({from: account}).then(function(gasAmount){
-      console.log("[count]=>", count)
-      console.log("[gasAmount]=>", gasAmount)
-      console.log("[from]=>", account.toLowerCase())
-      console.log("[to]=>", contract_address.toLowerCase())
-      console.log("[gasAmount]=>", gasAmount)
-      console.log("[gas]=>", 210000 * gasPrice / 10e18)
-      var rawTx = {
-        nonce: web3.utils.toHex(count),
-        to : contract_address.toLowerCase(),
-        from: account.toLowerCase(),
-        data : encoded,
-        // gas: web3.utils.toHex(gasAmount),
-        gasPrice: web3.utils.toHex(gasPrice),
-        gasLimit: web3.utils.toHex(300000),
-        value: 0
+    sendRewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Please Input token address")
+        throw err;
+      } else {
+        console.log(res);
+        window.alert("Reward token changed successfully")
       }
-
-      web3.eth.accounts.signTransaction(rawTx, accountInfo.privateKey).then(signed => {
-        console.log("signed=>", signed)
-        web3.eth.sendSignedTransaction(signed.rawTransaction)
-          .on('receipt', function(res) {
-            console.log(res);
-            window.alert("Reward token changed successfully")
-          })
-          .on('error', function(res) {
-            console.log(res);
-          })
-      });
     });
-    // rewardContract.methods.setRewardToken(rewardtokenadd).send({from: account, gas:300000}, (err, res) => {
-    //   if (err) {
-    //     window.alert("Please Input token address")
-    //     throw err;
-    //   } else {
-    //     console.log(res);
-    //     window.alert("Reward token changed successfully")
-    //   }
-    // });
   }
 
   const onWithdraw = async () => {
-    let encoded = await rewardContract.methods.claim().encodeABI()
-    let count = await web3.eth.getBlockNumber()
-
-    var tx = {
-      nonce: web3.utils.toHex(count),
-      to : contract_address,
-      data : encoded,
-      gasLimit: web3.utils.toHex(300000)
-    }
-
-    web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
-      web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
+    sendRewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Something was wrong. Withdraw failed!")
+        throw err;
+      } else {
         console.log(res);
         window.alert("Reward withdrawed successfully")
-      })
+      }
     });
-    // rewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
-    //   if (err) {
-    //     window.alert("Something was wrong. Withdraw failed!")
-    //     throw err;
-    //   } else {
-    //     console.log(res);
-    //     window.alert("Reward withdrawed successfully")
-    //   }
-    // });
   }
 
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
 
-    let encoded = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).encodeABI()
-    let count = await web3.eth.getBlockNumber()
-
-    var tx = {
-      nonce: web3.utils.toHex(count),
-      to : contract_address,
-      data : encoded,
-      gasLimit: web3.utils.toHex(300000)
-    }
-
-    web3.eth.accounts.signTransaction(tx, accountInfo.privateKey).then(signed => {
-      web3.eth.sendSignedTransaction(signed.rawTransaction).on('receipt', function(res) {
+    let reward = await sendRewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
+      if (err) {
+        window.alert("Something was wrong. Buy back failed!")
+        throw err;
+      } else {
         console.log(res);
         setBuyback(0);
         getValue();
         window.alert("Buy back successfully")
-      })
+      }
     });
-
-    // let reward = await rewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
-    //   if (err) {
-    //     window.alert("Something was wrong. Buy back failed!")
-    //     throw err;
-    //   } else {
-    //     console.log(res);
-    //     setBuyback(0);
-    //     getValue();
-    //     window.alert("Buy back successfully")
-    //   }
-    // });
   }
 
   const showDate = (time) => {
@@ -296,7 +195,7 @@ console.log(gasPrice)
 
   const getTokenName = async (tokenaddress) => {
     if(tokenaddress) {
-      const tokenContract = new web3.eth.Contract(ERC20, tokenaddress)
+      const tokenContract = new web3_call.eth.Contract(ERC20, tokenaddress)
 
       let name = await tokenContract.methods.name().call();
 
@@ -306,6 +205,8 @@ console.log(gasPrice)
 
   const getMyBNB = async () => {
     if(account) {
+      const web3 = new Web3('https://bsc-dataseed1.binance.org/');
+
       web3.eth.getBalance(account)
         .then(val => setBnbamount(Number(val.toString()) / (1000000000000000000)))
     }
@@ -326,8 +227,7 @@ console.log(gasPrice)
         setTotalAmount(Number(value.accountDividendsInfo[4].toString()) / 1000000000000000000)
 
         if(value.accountDividendsInfo[5] !== '0') {
-          let today = Number(new Date());
-          setLastreward(new Date(today - Number(value.accountDividendsInfo[5])))
+          setLastreward(new Date(value.accountDividendsInfo[5].toString()))
         } else {
           setLastreward("")
         }
