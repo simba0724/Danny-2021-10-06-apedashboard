@@ -169,7 +169,7 @@ console.log(provider)
   const onBuyback = async () => {
     if(buybackamount <= 0) {window.alert("Please Input BuyBack Balance."); return;}
 
-    let reward = await sendRewardContract.methods.buyBackTokensWithNoFees({from: account, value: buybackamount*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
+    let reward = await sendRewardContract.methods.buyBackTokensWithNoFees({from: account, value: buyback*1000000000000000000}).send({from: account, gas:300000}, (err, res) => {
       if (err) {
         window.alert("Something was wrong. Buy back failed!")
         throw err;

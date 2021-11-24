@@ -30,7 +30,7 @@ let providerOptions = {
 };
 
 let web3Modal = new Web3Modal({
-  network: "mainnet", // optional
+  network: "binance", // optional
   cacheProvider: true, // optional
   providerOptions // required
 });
