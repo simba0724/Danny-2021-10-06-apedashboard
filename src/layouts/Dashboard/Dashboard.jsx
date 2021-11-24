@@ -156,7 +156,8 @@ export default function Dashboard({account, provider}) {
   const onWithdraw = async () => {
     sendRewardContract.methods.claim().send({from: account, gas:300000}, (err, res) => {
       if (err) {
-        window.alert("Something was wrong. Withdraw failed!")
+        window.alert(err.message)
+        // window.alert("Something was wrong. Withdraw failed!")
         throw err;
       } else {
         console.log(res);
