@@ -59,7 +59,7 @@ function TablePaginationActions(props) {
 }
 
 export default function Dashboard({account, provider}) {
-
+console.log(provider)
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rewardtokenadd, setRewardtokenadd] = React.useState('');

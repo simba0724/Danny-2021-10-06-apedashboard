@@ -16,6 +16,14 @@ let providerOptions = {
       rpc: {
         56: 'https://bsc-dataseed1.binance.org'
       },
+      qrcode: true,
+      qrcodeModalOptions: {
+          mobileLinks: [
+            "metamask",
+            "trust",
+          ]
+      },
+      network: "binance",
       chainId: 56
     }
   }
